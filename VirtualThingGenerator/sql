@@ -1,0 +1,26 @@
+CREATE DATABASE `si4iot` /*!40100 DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci */ /*!80016 DEFAULT ENCRYPTION='N' */;
+USE si4iot;
+CREATE TABLE `INTERACAO` (
+  `idinteracao` int(11) NOT NULL AUTO_INCREMENT,
+  `nome_interacao` varchar(100) DEFAULT NULL,
+  `min_valor` float DEFAULT NULL,
+  `max_valor` float DEFAULT NULL,
+  `context` varchar(200) DEFAULT NULL,
+  `observable` varchar(50) DEFAULT NULL,
+  `readonly` varchar(50) DEFAULT NULL,
+  PRIMARY KEY (`idinteracao`)
+) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+CREATE TABLE `virtual_thing` (
+  `idvirtual_thing` int(11) NOT NULL AUTO_INCREMENT,
+  `nome` varchar(100) DEFAULT NULL,
+  `descricao` varchar(100) DEFAULT NULL,
+  `context` varchar(200) DEFAULT NULL,
+  PRIMARY KEY (`idvirtual_thing`)
+) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+CREATE TABLE `vt_interacao` (
+  `idvt_interacao` int(11) NOT NULL AUTO_INCREMENT,
+  `id_vt` int(11) DEFAULT NULL,
+  `id_interacao` int(11) DEFAULT NULL,
+  PRIMARY KEY (`idvt_interacao`)
+) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+
