@@ -21,7 +21,7 @@ let Data = require('./td.model');
 //Criando o middleware:
 app.use(cors());
 app.use(bodyParser.json());
-app.use(express.static(path.join(__dirname,"../src/build")));
+app.use(express.static(path.join(__dirname,"../public")));
 
 //Conectando com a base de dados Mongoose:
 mongoose.connect('mongodb://127.0.0.1:27017/td', {
