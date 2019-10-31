@@ -5,6 +5,9 @@ const bodyParser = require('body-parser');
 const cors = require('cors');
 const mongoose = require('mongoose');
 
+//Diretorio usado:
+const path = require("path");
+
 //Instancia do express:
 const app = express();
 //Porta usada pelo servidor:
@@ -18,6 +21,7 @@ let Data = require('./td.model');
 //Criando o middleware:
 app.use(cors());
 app.use(bodyParser.json());
+app.use(express.static(path.join(__dirname,"../src/build")));
 
 //Conectando com a base de dados Mongoose:
 mongoose.connect('mongodb://127.0.0.1:27017/td', {
@@ -45,15 +49,10 @@ tdRoutes.route('/').get (function(req, res) {
 });
 
 //Funcao responsavel pela execução de query no db:
-tdRoutes.route('/search').get(function(req, res) {
-    var query = req.body;
+tdRoutes.route('/search').post(function(req, res) {
+    let query = req.body;
+    console.log(query)
     Data.find(query, function(err, data) {
-        if (err){
-            res.status(404).send('Dado nao encontrado');
-            next();
-        }
-        data.id = req.body.id;
-        data.title = req.body.title;
         res.json(data);
     });
 });
