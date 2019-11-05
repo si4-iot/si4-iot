@@ -11,9 +11,10 @@ const path = require("path");
 //Instancia do express:
 const app = express();
 //Porta usada pelo servidor:
-const PORT = 4000;
-//Instancia do router atraves do router do express:
-const tdRoutes = express.Router();
+const PORT = process.env.PORT || 4000;
+
+// //Instancia do router atraves do router do express:
+// const tdRoutes = express.Router();
 
 //Importando o modelo de dados - schema:
 let Data = require('./td.model');
@@ -21,7 +22,6 @@ let Data = require('./td.model');
 //Criando o middleware:
 app.use(cors());
 app.use(bodyParser.json());
-app.use(express.static(path.join(__dirname,"../public")));
 
 //Conectando com a base de dados Mongoose:
 mongoose.connect('mongodb://127.0.0.1:27017/td', {
@@ -36,85 +36,21 @@ connection.once('open', function() {
     console.log("Conexao com a base dados MongoDB estabelecida com sucesso");
 })
 
-//ENDPOINTS:
-//Funcao responsavel pelo retorno de todos os itens da base de dados:
-tdRoutes.route('/').get (function(req, res) {
-    Data.find(function(err, data){
-        if (err) {
-            console.log(err);
-        }else {
-            res.json(data);
-        }
+
+const tdRoutes = require('./tdRoutes');
+app.use("/tdRoutes", tdRoutes);
+
+// Serve static assets if in production
+if (process.env.NODE_ENV === 'production') {
+    // Set static folder
+    app.use(express.static('./../src/build'));
+  
+    app.get('*', (req, res) => {
+      res.sendFile(path.resolve(__dirname, '../src', 'build', 'index.html'));
     });
-});
-
-//Funcao responsavel pela execução de query no db:
-tdRoutes.route('/search').post(function(req, res) {
-    let query = req.body;
-    console.log(query)
-    Data.find(query, function(err, data) {
-        res.json(data);
-    });
-});
-
-//Funcao responsavel pelo retorno de um item especifico da base de dados -- parametro id:
-tdRoutes.route('/:id').get(function(req, res) {
-    let id = req.params.id;
-    Data.findById(id, function(err, data) {
-        res.json(data);
-    });
-});
-
-//Funcao responsavel pela adicição de um novo item na base de dados:
-tdRoutes.route('/add').post (function(req, res) {
-    let data = new Data(req.body);
-    data.save()
-        .then(data => {
-            res.status(200).json({'data': 'Dado adicionado com sucesso'});
-        })
-        .catch(err => {
-            res.status(400).send('Falha ao adicionar novo dado');
-        });
-});
-
-//Funcao responsavel pelo update de um item especifico da base de dados -- parametro id:
-tdRoutes.route('/update/:id').post(function(req, res) {
-    Data.findById(req.params.id, function(err, data) {
-        if (!data)
-            res.status(404).send('Dado nao encontrado');
-        else
-            data.id = req.body.id;
-            data.title = req.body.title;
-            
-            data.save().then(data => {
-                res.json('Dado alterado!');
-            })
-            .catch(err => {
-                res.status(400).send("Update nao completado");
-            });
-    });
-});
-
-//Funcao responsavel pela delecao de um item especifico da base de dados -- parametro id:
-tdRoutes.route('/delete/:id').get(function(req, res) {
-    Data.findById(req.params.id, function(err, data) {
-        if (!data)
-            res.status(404).send('Dado nao encontrado');
-        else
-            data.uri = req.body.id;
-            data.td = req.body.title;
-            
-            data.remove().then(data => {
-                res.json('Dado removido!');
-            })
-            .catch(err => {
-                res.status(400).send("Nao foi possivel remover dado");
-            });
-    });
-});
-
-//Incluindo o router:
-app.use('/td', tdRoutes);
+}
+// //Incluindo o router:
+// app.use('/td', tdRoutes);
 
 //Iniciando o servidor: 
 app.listen(PORT, function() {
