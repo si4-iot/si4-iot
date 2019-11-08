@@ -8,7 +8,7 @@ export default class Search extends Component {
         super(props);
 
         this.onChangeTexto = this.onChangeTexto.bind(this);
-        //this.onChangeCheck = this.onChangeCheck.bind(this);
+        this.onChangeCheck = this.onChangeCheck.bind(this);
         this.onSubmit = this.onSubmit.bind(this);
 
         this.state = {
@@ -52,17 +52,26 @@ export default class Search extends Component {
         });
     }
 
+    onChangeCheck(e){
+
+    }
+
     
     getCatalogos(){
         return this.state.catalogos.map(function(current, i) {
-            return <p>{current.url}</p>;
+            return (<div>
+                        <input className="form-check-input" type="checkbox" id="defaultCheck1" 
+                                value={i}
+                                onChange={this.onChangeCheck}/>
+                        <label className="form-check-label" htmlFor="defaultCheck1">{current.url}</label>
+                    </div>);
         });
     }
 
     onSubmit(e) {
         e.preventDefault();
 
-        const newData =  this.state.texto
+//        const newData =  this.state.texto
 
         this.setState({
             texto: '',
@@ -97,10 +106,7 @@ export default class Search extends Component {
                 <form onSubmit={this.onSubmit}>   
                     <div className="form-check">
                         <div className="panel-heading">Selecione entre os catalogos disponíveis: </div>
-                        <input className="form-check-input" type="checkbox" value="" id="defaultCheck1" />
-                        <label className="form-check-label" htmlFor="defaultCheck1">
-                            {this.getCatalogos()}
-                        </label> 
+                        {this.getCatalogos()}
                     </div>
                     <div className="form-group">
                         <label>Defina sua consulta</label>
