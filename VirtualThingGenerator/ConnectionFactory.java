@@ -5,8 +5,8 @@ import java.sql.DriverManager;
 
 public class ConnectionFactory {
 	private String servidor="jdbc:mysql://localhost:3306/si4iot";
-	private String usuario ="";
-	private String senha = "";
+	private String usuario ="root";
+	private String senha = "12345678";
 	private String driver = "com.mysql.cj.jdbc.Driver";
 	
 	public Connection getConnection() {

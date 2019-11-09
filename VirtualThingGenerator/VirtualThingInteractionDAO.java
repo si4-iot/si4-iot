@@ -50,6 +50,56 @@ public class VirtualThingInteractionDAO {
 			}
 		}
 	}
+	public List<String> listContext(int id_thing) throws SQLException{
+		this.connection = new ConnectionFactory().getConnection();
+		List<String> listSrtContext= new ArrayList<String>();
+		String sql = "SELECT c.concept as contexto FROM si4iot.INTERACAO i, si4iot.concept c, si4iot.vt_interacao"
+				+" where i.idconcept_context = c.idconcept"
+				+" and vt_interacao.id_interacao = i.idinteracao"
+				+" and vt_interacao.id_vt = ?";
+		try {
+			PreparedStatement stmt = connection.prepareStatement(sql);
+			stmt.setString(1, String.valueOf(id_thing));
+			ResultSet rs = stmt.executeQuery();
+			while(rs.next()) {
+				listSrtContext.add(rs.getString(1));
+			}
+			stmt.close();
+			return listSrtContext;
+		} catch (Exception e) {
+			// TODO: handle exception
+			throw new RuntimeException(e);
+		}finally {
+			connection.close();
+		}
+		
+	}
+	
+	public List<String> listUnitMeasurement(int id_thing) throws SQLException{
+		this.connection = new ConnectionFactory().getConnection();
+		List<String> listSrtContext= new ArrayList<String>();
+		String sql = "SELECT c.concept as unit_measurement FROM si4iot.INTERACAO i, si4iot.concept c, si4iot.vt_interacao"
+				+" where i.idconcept_unit_measurement = c.idconcept"
+				+" and vt_interacao.id_interacao = i.idinteracao"
+				+" and vt_interacao.id_vt = ?";
+		try {
+			PreparedStatement stmt = connection.prepareStatement(sql);
+			stmt.setString(1, String.valueOf(id_thing));
+			ResultSet rs = stmt.executeQuery();
+			while(rs.next()) {
+				listSrtContext.add(rs.getString(1));
+			}
+			stmt.close();
+			return listSrtContext;
+		} catch (Exception e) {
+			// TODO: handle exception
+			throw new RuntimeException(e);
+		}finally {
+			connection.close();
+		}
+		
+	}
+	
 	public List<Property> listInteractions(int id_thing) throws SQLException {
 		this.connection = new ConnectionFactory().getConnection();
 		List<Property> list_property = new ArrayList<Property>();
