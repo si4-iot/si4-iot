@@ -3,18 +3,19 @@
   "version": "1.0.0",
   "main": "index.js",
   "scripts": {
-    "install": "npm install --prefix ../",
+    "client-install": "cd ../ && npm install",
     "start": "node server.js",
     "server": "nodemon server.js",
-    "src": "npm start --prefix ../",
-    "dev": "concurrently \"npm run server\" \"npm run ../\"",
-    "heroku-postbuild": "NPM_CONFIG_PRODUCTION=false npm install --prefix ../ && npm run build --prefix ../"
+    "client": "cd ../ && npm start",
+    "dev": "concurrently \"npm run server\" \"npm run client\"",
+    "heroku-postbuild": "NPM_CONFIG_PRODUCTION=false cd ../ && npm install && npm run build"
   },
   "keywords": [],
   "author": "",
   "license": "ISC",
   "dependencies": {
     "body-parser": "^1.19.0",
+    "concurrently": "^5.0.0",
     "cors": "^2.8.5",
     "express": "^4.17.1",
     "mongoose": "^5.7.1"

@@ -53,8 +53,8 @@ let Description = new Schema({
     title: {
         type: String,
         required: false
-    }
+    } 
 });
 
 //Exportando o schema
-module.exports = mongoose.model('Description', Description);
+module.exports = Description = mongoose.model('Description', Description);

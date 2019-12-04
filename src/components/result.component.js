@@ -1,8 +1,9 @@
 import React, {Component} from 'react';
 import { Link } from 'react-router-dom';
 
+//Redux Components
 import { connect } from 'react-redux';
-import { get } from '../actions/td.actions';
+import { search } from '../actions/td.actions';
 import PropTypes from 'prop-types';
 
 //Exibicao de uma descricao
@@ -18,27 +19,25 @@ const Description = props => (
         </td>
     </tr>
 )
-
-class List extends Component {
-
-    //Faz o request das descricoes ao servidor através da action GET:
-    componentDidMount() {
-        this.props.get();
+class Result extends Component {
+    
+    descriptionList() {        
+        const { description } = this.props.td;
+        console.log('DESCRIpTION: '+description)
+        if (description.length === 0){
+            return (<div><p style={{color:"red"}}>Nenhuma descricao encontrada!</p></div>);
+        }
+        else {
+            return description.map(function(currentDescription, i) {
+                return <Description desc={currentDescription} key={i} />;
+            });
+        }
     }
 
-    //Lista as descricoes contidas no vetor description do state:
-    descriptionList() {
-        const { descriptions } = this.props.td;
-        return descriptions.map(function(currentDescription, i) {
-             return <Description desc={currentDescription} key={i} />;
-        });
-    }
-
-    //Rendeniza o component:
     render() {
         return (
             <div style={{ marginTop: 20 }}>
-                <h3>Catálogo</h3>
+                <label>Dispositivos encontrados</label>
                 <table className="table table-striped" style={{ marginTop: 20 }}>
                     <thead>
                         <tr>
@@ -47,7 +46,7 @@ class List extends Component {
                         </tr>
                     </thead>
                     <tbody>
-                        { this.descriptionList() }
+                        {this.descriptionList()}
                     </tbody>
                 </table>
             </div>
@@ -56,8 +55,8 @@ class List extends Component {
 }
 
 // Props do componente LIST:
-List.propTypes = {
-    get: PropTypes.func.isRequired,
+Result.propTypes = {
+    search: PropTypes.func.isRequired,
     td: PropTypes.object.isRequired
 };
 
@@ -67,4 +66,4 @@ const mapStateToProps = state => ( {
     td: state.td
 });
 
-export default connect( mapStateToProps, { get })(List);
+export default connect( mapStateToProps, {search})(Result);

@@ -1,41 +1,35 @@
 import React, {Component} from 'react';
-import axios from 'axios';
 
-export default class Read extends Component {
+import { connect } from 'react-redux';
+import { getTD } from '../actions/td.actions';
+import PropTypes from 'prop-types';
+ 
+class Read extends Component {
 
-    constructor(props) {
-        super(props);
-        this.state = {description: []};
-    }
+    state = {
+        description: []
+    };
     
     componentDidMount() {
-        axios.get('http://localhost:4000/td/'+this.props.match.params.id)
-            .then(response => {
-                this.setState({description: response.data});
-            })
-            .catch(function (error) {
-                console.log(error);
-            })
+        this.props.getTD(this.props.match.params.id);
     }
 
-    printProperties(){
-        
-        
-        return JSON.stringify(this.state.description.properties,null);
-    }
-    printActions(){
-
-    }
-    printEvents(){
-
+    printContext(description){
+        for(var aux in description) {
+            if (aux === "@context"){
+                return JSON.stringify(description[aux]);  
+            }
+        }
     }
 
     render() {
+        const { description } = this.props.td;
+        //let aux;
         return (
             <div style={{ marginTop: 20 }}>
                 <h3>Thing Description:</h3>
-                <table class="table table-striped " style={{ marginTop: 20 }}>
-                    <thead class="table-primary">
+                <table className="table table-striped " style={{ marginTop: 20 }}>
+                    <thead className="table-primary">
                         <tr>
                             <th>Context</th>
                             <th>ID</th>
@@ -44,15 +38,15 @@ export default class Read extends Component {
                     </thead>
                     <tbody>
                         <tr>
-                            <td>{JSON.stringify(this.state.description.context,null)    }</td>
-                            <td>{this.state.description.id}</td>
-                            <td>{this.state.description.title}</td>
+                            <td>{this.printContext(description)}</td>
+                            <td>{description.id}</td>
+                            <td>{description.title}</td>
                         </tr>
                     </tbody>
                 </table>
                 <hr/>
-                <table class="table table-striped " style={{ marginTop: 20 }}>
-                    <thead class="table-primary">
+                <table className="table table-striped " style={{ marginTop: 20 }}>
+                    <thead className="table-primary">
                         <tr>
                             <th>Security Definitions</th>
                             <th>Security</th>
@@ -60,14 +54,14 @@ export default class Read extends Component {
                     </thead>
                     <tbody>
                         <tr>
-                            <td>{JSON.stringify(this.state.description.securityDefinitions, null)}</td>
-                            <td>{JSON.stringify(this.state.description.security, null)}</td>
+                            <td>{JSON.stringify(description.securityDefinitions, null)}</td>
+                            <td>{JSON.stringify(description.security, null)}</td>
                         </tr>
                     </tbody>
                 </table>
                 <hr/>
-                <table class="table table-striped " style={{ marginTop: 20 }}>
-                    <thead class="table-primary">
+                <table className="table table-striped " style={{ marginTop: 20 }}>
+                    <thead className="table-primary">
                         <tr>
                             <th>Properties</th>
                             <th>Actions</th>
@@ -76,9 +70,9 @@ export default class Read extends Component {
                     </thead>
                     <tbody>
                         <tr>
-                            <td>{this.printProperties()}</td>
-                            <td>{JSON.stringify(this.state.description.actions, null)}</td>
-                            <td>{JSON.stringify(this.state.description.events, null)}</td>
+                            <td>{JSON.stringify(description.properties,null)}</td>
+                            <td>{JSON.stringify(description.actions, null)}</td>
+                            <td>{JSON.stringify(description.events, null)}</td>
                         </tr>
                     </tbody>
                 </table>
@@ -86,3 +80,18 @@ export default class Read extends Component {
         )
     }
 }
+
+
+// Props do componente LIST:
+Read.propTypes = {
+    getTD: PropTypes.func.isRequired,
+    td: PropTypes.object.isRequired
+};
+
+//Permite que o state usado no reducer seja mapeado no props do Componente
+    //Faz refencia ao root reducer - index.js
+const mapStateToProps = state => ( {
+    td: state.td
+});
+
+export default connect( mapStateToProps, { getTD })(Read);

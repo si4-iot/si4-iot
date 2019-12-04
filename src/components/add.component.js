@@ -1,39 +1,30 @@
 import React, {Component} from 'react';
 import axios from 'axios';
 
-export default class CreateDesc extends Component {
 
-    constructor(props) {
-        super(props);
+//React Components
+import { connect } from 'react-redux';
+import { add } from '../actions/td.actions';
+import PropTypes from 'prop-types';
 
-        this.onChangeURL = this.onChangeURL.bind(this);
-        this.onSubmit = this.onSubmit.bind(this);
+class Add extends Component {
 
-        this.onChangeURLS = this.onChangeURLS.bind(this);
-        this.onSubmitMulti = this.onSubmitMulti.bind(this);
-
-        this.state = {
-            url: '',
-            urls:'',
-            description: {},
-            multidescription: []
-        }
+    state = {
+        url: '',
+        urls:'',
+        description: {},
+        multidescription: []
     }
 
-    onChangeURL(e) {
-        this.setState({
-            url: e.target.value
-        });
-    }
+    onChangeURL = e => {
+        this.setState({ url: e.target.value });
+    };
 
-    onChangeURLS(e) {
-        this.setState({
-            urls: e.target.value
-        });
-    }
+    onChangeURLS = e => {
+        this.setState({ urls: e.target.value });
+    };
 
-
-    onSubmit(e) {
+    onSubmit = e => {
         e.preventDefault();
 
         var url = this.state.url
@@ -44,22 +35,17 @@ export default class CreateDesc extends Component {
             .then(response => {
                 this.setState({description: response.data});
                 console.log('Descricao encontrada!')
-                axios.post('http://localhost:4000/td/add', this.state.description)
-                    .then(res => console.log(res.data))
-                    .catch(function (error) {
-                        console.log('Falha ao armazenar: ' + error);
-                    })
+                //Adicionando nova descricao via add action
+                this.props.add(this.state.description);
             })
             .catch(function (error) {
                 console.log('Erro ao obter URL');
             })
-        
-
     }
 
-    onSubmitMulti(e) {
+    onSubmitMulti = e => {
         e.preventDefault();
-
+        
         var urls = this.state.urls
 
         console.log(`Form submitted: ` + urls);
@@ -76,14 +62,8 @@ export default class CreateDesc extends Component {
                         .then(response => {
                             console.log('Descricao: ' + desc)
                             desc =  response.data
-                            axios.post('http://localhost:4000/td/add', desc)
-                                .then(res => {
-                                    console.log('Thing adicionada!')
-                                    console.log(res.data)
-                                })
-                                .catch(function (error) {
-                                    console.log('Falha ao armazenar: ' + error);
-                                })
+                            //Adicionando nova descricao via add action
+                            this.props.add(desc);
                         })
                         .catch(function (error) {
                             console.log('Erro ao obter Descricao');
@@ -132,3 +112,17 @@ export default class CreateDesc extends Component {
         )
     }
 }
+
+// Props do componente LIST:
+Add.propTypes = {
+    add: PropTypes.func.isRequired,
+    td: PropTypes.object.isRequired
+};
+
+//Permite que o state usado no reducer seja mapeado no props do Componente
+    //Faz refencia ao root reducer - index.js
+const mapStateToProps = state => ( {
+    td: state.td
+});
+
+export default connect( mapStateToProps, { add })(Add);

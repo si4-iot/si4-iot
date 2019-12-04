@@ -1,89 +1,64 @@
 import React, {Component} from 'react';
-import axios from 'axios';
 
-export default class CreateDesc extends Component {
+//Redux Components
+import { connect } from 'react-redux';
+import { add } from '../actions/td.actions';
+import PropTypes from 'prop-types';
 
-    constructor(props) {
-        super(props);
-
-        this.onChangeContext = this.onChangeContext.bind(this);
-        this.onChangeID = this.onChangeID.bind(this);
-        this.onChangeTitle = this.onChangeTitle.bind(this);
-        this.onChangeSecurityDef = this.onChangeSecurityDef.bind(this);
-        this.onChangeSecurity = this.onChangeSecurity.bind(this);
-        this.onChangeProperties = this.onChangeProperties.bind(this);
-        this.onChangeActions = this.onChangeActions.bind(this);
-        this.onChangeEvents = this.onChangeEvents.bind(this);
-
-        this.onSubmit = this.onSubmit.bind(this);
-
-        this.state = {
-            context: '',
-            id: '',
-            title: '',
-            securityDef: '',
-            security: '',
-            properties: '',
-            actions: '',
-            events: ''
-        }
-    }
-
-    onChangeContext(e) {
-        this.setState({
-            context: e.target.value
-        });
-    }
+class Create extends Component {
     
-    onChangeID(e) {
-        this.setState({
-            id: e.target.value
-        });
-    }
+    state = {
+        '@context': '',
+        '@type': '',
+        id: '',
+        title: '',
+        securityDef: '',
+        security: '',
+        properties: '',
+        actions: '',
+        events: ''
+    };
+    
+    onChangeContext = e => {
+        this.setState({ '@context': e.target.value });
+    };
 
-    onChangeTitle(e) {
-        this.setState({
-            title: e.target.value
-        });
-    }
+    onChangeActions = e => {
+        this.setState({ actions: e.target.value });
+    };
 
-    onChangeSecurityDef(e) {
-        this.setState({
-            securityDef: e.target.value
-        });
-    }
+    onChangeEvents = e => {
+        this.setState({ events: e.target.value });
+    };
 
-    onChangeSecurity(e) {
-        this.setState({
-            security: e.target.value
-        });
-    }
+    onChangeID = e => {
+        this.setState({ id: e.target.value });
+    };
 
-    onChangeProperties(e) {
-        this.setState({
-            properties: e.target.value
-        });
-    }
+    onChangeProperties = e => {
+        this.setState({ properties: e.target.value });
+    };
 
-    onChangeActions(e) {
-        this.setState({
-            actions: e.target.value
-        });
-    }
+    onChangeSecurity = e => {
+        this.setState({ security: e.target.value });
+    };
 
-    onChangeEvents(e) {
-        this.setState({
-            events: e.target.value
-        });
-    }
+    onChangeSecurityDef = e => {
+        this.setState({ securityDef: e.target.value });
+    };
 
-    onSubmit(e) {
+    onChangeTitle = e => {
+        this.setState({ title: e.target.value });
+    };
+    
+    onSubmit = e => {
         e.preventDefault();
-
+        
         console.log(`Form submitted:`);
         
+        //Nova descricao
         const newTD = {
-            context: this.state.context,
+            '@context': this.state.context,
             id: this.state.id,
             title: this.state.title,
             securityDef: this.state.securityDef,
@@ -92,13 +67,13 @@ export default class CreateDesc extends Component {
             actions: this.state.actions,
             events: this.state.events
         }
-
         console.log(newTD)
-        axios.post('http://localhost:4000/td/add', newTD)
-            .then(res => console.log(res.data));
+    
+        //Adicionando nova descricao via add action
+        this.props.add(newTD);
 
         this.setState({
-            context: '',
+            '@context': '',
             id: '',
             title: '',
             securityDef: '',
@@ -107,7 +82,7 @@ export default class CreateDesc extends Component {
             actions: '',
             events: ''
         });
-    }
+    };
 
     render() {
         return (
@@ -186,3 +161,17 @@ export default class CreateDesc extends Component {
         )
     }
 }
+
+// Props do componente LIST:
+Create.propTypes = {
+    add: PropTypes.func.isRequired,
+    td: PropTypes.object.isRequired
+};
+
+//Permite que o state usado no reducer seja mapeado no props do Componente
+    //Faz refencia ao root reducer - index.js
+const mapStateToProps = state => ( {
+    td: state.td
+});
+
+export default connect( mapStateToProps, { add })(Create);

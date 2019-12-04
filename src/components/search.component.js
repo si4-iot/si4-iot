@@ -1,61 +1,30 @@
 import React, {Component} from 'react';
-import axios from 'axios';
-import { Link } from 'react-router-dom';
 
-export default class Search extends Component {
+//Redux Components
+import { connect } from 'react-redux';
+import { search } from '../actions/td.actions';
+import PropTypes from 'prop-types';
 
-    constructor(props) {
-        super(props);
 
-        this.onChangeTexto = this.onChangeTexto.bind(this);
-        this.onSubmit = this.onSubmit.bind(this);
+class Search extends Component {
 
-        this.state = {
-            texto: '',
-            description: []
-        }
-        
-        this._isMounted = false;
+    state = {
+        texto: ''
     }
     
-    componentWillUnmount() {
-        this._isMounted = false;
-        this.setState({description: []})
-    }
-    
-    componentDidMount() {
-        this._isMounted = true;
-        this.setState({description: []})
-    }
+    onChangeTexto = e => {
+        this.setState({ texto: e.target.value });
+    };
 
-    onChangeTexto(e) {
-        this.setState({
-            texto: e.target.value
-        });
-    }
-
-    onSubmit(e) {
+    onSubmit = e => {
         e.preventDefault();
+        console.log("submit : ")
+        console.log(this.state.texto)
 
-        axios.post('http://localhost:4000/td/search', this.state.texto)
-            .then(res => {
-                this.setState({
-                    texto: this.state.texto,
-                    description: [res.data]})
-                console.log('Query sended: ' + this.state.texto)
-                console.log('Query result: ' + res.data)
-            })
-            .catch(function (error) {
-                console.log('Falha ao localizar: ' + error);
-            })
-
-        this.setState({
-            texto: '',
-            description: []
-        })
+        //Fazendo uma nova consulta ao catalogo via search action
+        this.props.search(this.state.texto);
+        this.props.history.push('/result');
     }
-
-    
 
     render() {
         return (
@@ -63,63 +32,33 @@ export default class Search extends Component {
                 <form onSubmit={this.onSubmit}>
                     <div className="form-group">
                         <label>Localizar TD's disponíveis </label>
-                            <div class="formul">
-                                <textarea class="texto-form" id="busca" rows="5" cols="100" 
+                            <div className="formul">
+                                <textarea className="texto-form" id="busca" rows="5" cols="100" 
                                 value={this.state.texto}
                                 onChange={this.onChangeTexto}></textarea>
                             </div>
                     </div>
                     <div className="form-group">
-                        <div class="text-center">
-                            <input type="submit" value="Buscar" className="btn btn-outline-dark" />    
+                        <div className="text-center">
+                            <input type="submit" value="Buscar" className="btn btn-outline-dark" /> 
                         </div>
                     </div>
                 </form>
-                <Test description={this.state.description} />
             </div>
         )
     }
 }
 
-const Description = props => (
-    <tr>
-        <td>{props.description.id}</td>
-        <td>{props.description.title}</td>
-        <td>
-            <Link to={"/edit/"+props.description._id}>Editar</Link>
-        </td>
-        <td>
-            <Link to={"/read/"+props.description._id}>Visualizar</Link>
-        </td>
-    </tr>
-)
+// Props do componente LIST:
+Search.propTypes = {
+    search: PropTypes.func.isRequired,
+    td: PropTypes.object.isRequired
+};
 
-class Test extends Component {
-    
-    descriptionList() {
-        return this.props.description.map(function(currentDescription, i) {
-            return currentDescription.map(function(des, index) {
-                return <Description description={des} key={index} />;
-            })
-        });
-    }
+//Permite que o state usado no reducer seja mapeado no props do Componente
+    //Faz refencia ao root reducer - index.js
+const mapStateToProps = state => ( {
+    td: state.td
+});
 
-    render() {
-        return (
-            <div style={{ marginTop: 20 }}>
-                <label>Dispositivos encontrados</label>
-                <table className="table table-striped" style={{ marginTop: 20 }}>
-                    <thead>
-                        <tr>
-                            <th>ID</th>
-                            <th>Title</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        {this.descriptionList()}
-                    </tbody>
-                </table>
-            </div>
-        )
-    }
-}
+export default connect( mapStateToProps, { search })(Search);
