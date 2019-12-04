@@ -1,16 +1,15 @@
 //Pacotes usados:
 const express = require('express');
+//Importando o modelo de dados - schema:
+let Data = require('./td.model');
 
 //Instancia do router atraves do router do express:
 const tdRoutes = express.Router();
 
-//Importando o modelo de dados - schema:
-let Data = require('./td.model');
-
 
 //ENDPOINTS:
 //Funcao responsavel pelo retorno de todos os itens da base de dados:
-tdRoutes.route('/').get (function(req, res) {
+tdRoutes.get('/', (req, res) => {
     console.log('Acesso ao metodo list');
     Data.find(function(err, data){
         if (err) {
@@ -24,10 +23,14 @@ tdRoutes.route('/').get (function(req, res) {
 //Funcao responsavel pela execução de query no db:
 tdRoutes.route('/search').post(function(req, res) {
     console.log('Acesso ao metodo search');
-    let query = req.body;
+    var query = JSON.parse(req.body.consult);
     console.log(query)
     Data.find(query, function(err, data) {
-        res.json(data);
+        if (err) {
+            console.log(err);
+        }else {
+            res.json(data);
+        }
     });
 });
 
@@ -44,6 +47,7 @@ tdRoutes.route('/:id').get(function(req, res) {
 tdRoutes.route('/add').post (function(req, res) {
     console.log('Acesso ao método add');
     let data = new Data(req.body);
+    console.log(data);
     data.save()
         .then(data => {
             res.status(200).json({'data': 'Dado adicionado com sucesso'});

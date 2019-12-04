@@ -13,14 +13,10 @@ const app = express();
 //Porta usada pelo servidor:
 const PORT = process.env.PORT || 4000;
 
-// //Instancia do router atraves do router do express:
-// const tdRoutes = express.Router();
-
-//Importando o modelo de dados - schema:
-let Data = require('./td.model');
+//Incluindo o router:
+const tdRoutes = require('./tdRoutes');
 
 //Criando o middleware:
-app.use(cors());
 app.use(bodyParser.json());
 
 //Conectando com a base de dados Mongoose:
@@ -28,31 +24,30 @@ mongoose.connect('mongodb://127.0.0.1:27017/td', {
     useNewUrlParser: true,
     useUnifiedTopology: true
 });
+
+//Incluindo o router:
+app.use('/td', tdRoutes);
+
 //Referrencia da conexao com o BD:
 const connection = mongoose.connection;
+
+// Servidor em modo estatico se estiver 'in production'
+if (process.env.NODE_ENV === 'production') {
+    console.log("Server in production!")
+    //Pasta do estatico
+    app.use(express.static('../src/build'));
+  
+    app.get('*', (req, res) => {
+      res.sendFile(path.resolve(__dirname, '../src', 'build', 'index.html'));
+    });
+}
 
 //Callback ativado assim que a conexao for aberta com sucesso:
 connection.once('open', function() {
     console.log("Conexao com a base dados MongoDB estabelecida com sucesso");
 })
 
-
-const tdRoutes = require('./tdRoutes');
-app.use("/tdRoutes", tdRoutes);
-
-// Serve static assets if in production
-if (process.env.NODE_ENV === 'production') {
-    // Set static folder
-    app.use(express.static('./../src/build'));
-  
-    app.get('*', (req, res) => {
-      res.sendFile(path.resolve(__dirname, '../src', 'build', 'index.html'));
-    });
-}
-// //Incluindo o router:
-// app.use('/td', tdRoutes);
-
 //Iniciando o servidor: 
 app.listen(PORT, function() {
-    console.log("Server is running on Port: " + PORT);
+    console.log("Servidor alocado na porta: " + PORT);
 });

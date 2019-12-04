@@ -1,53 +1,40 @@
 import React, {Component} from 'react';
 import { Link } from 'react-router-dom';
-import axios from 'axios';
 
+import { connect } from 'react-redux';
+import { get } from '../actions/td.actions';
+import PropTypes from 'prop-types';
+
+//Exibicao de uma descricao
 const Description = props => (
     <tr>
-        <td>{props.description.id}</td>
-        <td>{props.description.title}</td>
+        <td>{props.desc.id}</td>
+        <td>{props.desc.title}</td>
         <td>
-            <Link to={"/edit/"+props.description._id}>Editar</Link>
+            <Link to={"/edit/"+props.desc._id}>Editar</Link>
         </td>
         <td>
-            <Link to={"/read/"+props.description._id}>Visualizar</Link>
+            <Link to={"/read/"+props.desc._id}>Visualizar</Link>
         </td>
     </tr>
 )
 
-export default class List extends Component {
+class List extends Component {
 
-    constructor(props) {
-        super(props);
-        this.state = {description: []};
-    }
-
+    //Faz o request das descricoes ao servidor através da action GET:
     componentDidMount() {
-        axios.get('http://localhost:4000/td/')
-            .then(response => {
-                this.setState({description: response.data});
-            })
-            .catch(function (error) {
-                console.log(error);
-            })
+        this.props.get();
     }
 
-    componentDidUpdate() {
-        axios.get('http://localhost:4000/td/')
-        .then(response => {
-            this.setState({description: response.data});
-        })
-        .catch(function (error) {
-            console.log(error);
-        })   
-    }
-
+    //Lista as descricoes contidas no vetor description do state:
     descriptionList() {
-        return this.state.description.map(function(currentDescription, i) {
-            return <Description description={currentDescription} key={i} />;
+        const { descriptions } = this.props.td;
+        return descriptions.map(function(currentDescription, i) {
+             return <Description desc={currentDescription} key={i} />;
         });
     }
 
+    //Rendeniza o component:
     render() {
         return (
             <div style={{ marginTop: 20 }}>
@@ -67,3 +54,17 @@ export default class List extends Component {
         )
     }
 }
+
+// Props do componente LIST:
+List.propTypes = {
+    get: PropTypes.func.isRequired,
+    td: PropTypes.object.isRequired
+};
+
+//Permite que o state usado no reducer seja mapeado no props do Componente
+    //Faz refencia ao root reducer - index.js
+const mapStateToProps = state => ( {
+    td: state.td
+});
+
+export default connect( mapStateToProps, { get })(List);
