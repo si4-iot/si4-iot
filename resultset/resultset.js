@@ -11,12 +11,18 @@ IMG_GETTER_PATH = 'td-image-getter.js';
 // urls for testing
 const myurl = ["http://localhost:8080/counter", "http://localhost:8080/sensor"];
 // const myurl = ["http://localhost:8080/counter"];
+// const myurl = ["http://localhost:8080/sensor"];
 // const myurl = ["http://localhost:8080/counter", "http://localhost:8080/sensor", "inviable-example"];
 // const myurl = [];
 
 ResultSet(myurl).then((img) => {
     console.log('Resultset ended successfuly');
-    console.log(img);
+    console.log('images get:', img);
+    // for (const i of img) {
+    //     for (const [name, property] of Object.entries(i.properties)) {
+    //         console.log(name, property.value);
+    //     }
+    // }
 }, (cause) => {
     console.log('Rejected:', cause);
 }).catch((err) => { console.error("Resultset failed:", err); });
