@@ -1,5 +1,5 @@
 {
-  "name": "backend",
+  "name": "catalogo-app",
   "version": "1.0.0",
   "main": "index.js",
   "scripts": {
@@ -20,6 +20,8 @@
     "express": "^4.17.1",
     "mongoose": "^5.7.1"
   },
-  "devDependencies": {},
-  "description": ""
+  "devDependencies": {
+    "nodemon": "^1.17.5"
+  },
+  "description": "This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app)."
 }
