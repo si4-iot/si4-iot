@@ -1,15 +1,13 @@
-// var XMLHttpRequest = require('xmlhttprequest').XMLHttpRequest;
 var express = require("express");
 var myParser = require("body-parser");
-// var mqtt = require('mqtt');
 
 IMG_GETTER_PATH = 'td-image-getter.js';
-// CLI_PATH = '../../thingweb.node-wot/packages/cli/dist/cli.js';
-// IMG_GENERATOR_PATH = 'image-generator.js';
-// CLI_FLAGS = '--clientOnly';
+
+// urls as program parameters
+const myurl = process.argv.slice(2);
 
 // urls for testing
-const myurl = ["http://localhost:8080/counter", "http://localhost:8080/sensor"];
+// const myurl = ["http://localhost:8080/counter", "http://localhost:8080/sensor"];
 // const myurl = ["http://localhost:8080/counter"];
 // const myurl = ["http://localhost:8080/sensor"];
 // const myurl = ["http://localhost:8080/counter", "http://localhost:8080/sensor", "inviable-example"];
@@ -17,12 +15,12 @@ const myurl = ["http://localhost:8080/counter", "http://localhost:8080/sensor"];
 
 ResultSet(myurl).then((img) => {
     console.log('Resultset ended successfuly');
-    console.log('images get:', img);
-    // for (const i of img) {
-    //     for (const [name, property] of Object.entries(i.properties)) {
-    //         console.log(name, property.value);
-    //     }
-    // }
+    // console.log('images get:', img);
+    for (const i of img) {
+        for (const [name, property] of Object.entries(i.properties)) {
+            console.log(name, property.value);
+        }
+    }
 }, (cause) => {
     console.log('Rejected:', cause);
 }).catch((err) => { console.error("Resultset failed:", err); });

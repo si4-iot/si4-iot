@@ -28,25 +28,25 @@ new Promise((resolve, reject) => {
 	// Building the image of each url.
 	for (const url_s of urls) {
 		url = url_s.substring(2,url_s.length -1);
-		// console.log(url);
 		await WoT.fetch(url).then(async (td) => {
 
 			let thing = WoT.consume(td);
 
 			try {
+				// Adding the current value of each readable property to the thing
 				for (property of Object.values(thing.properties)) {
 					if (!property.writeOnly) {
 						let read = await property.read();
 						property["value"] = read;
 					}
 				}
-				image = JSON.stringify(thing);
+				image = JSON.stringify(thing); 
 
+				// Sending image back to the td-image-getter
 				var xhr = new XMLHttpRequest();
 				var url = "http://localhost:" + DEFAULT_PORT + '/';
 				xhr.open("POST", url, true);
 				xhr.setRequestHeader("Content-Type", "application/json");
-				// console.log('sending data...');
 				xhr.send(image);
 
 			} catch (err) {
@@ -55,4 +55,4 @@ new Promise((resolve, reject) => {
 
 		}).catch((err) => { console.error("Fetch error:", err); });
 	};
-}).catch((err) => { console.error(err) });
+}).catch((err) => { console.error('Url request error:', err) });
