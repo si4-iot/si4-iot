@@ -2,15 +2,20 @@ var express = require("express");
 var myParser = require("body-parser");
 var childProcess = require('child_process');
 
-CLI_PATH = '../../thingweb.node-wot/packages/cli/dist/cli.js';
+// image-generator.js relative path
 IMG_GENERATOR_PATH = 'image-generator.js';
+
+// Used thingweb.node's cli flags
 CLI_FLAGS = '--clientOnly';
 
 // Difining default used port.
 // ATENTION: must be equally defined in both td-image-getter.js and image-generator.js files
 DEFAULT_PORT = 8000;
 
-const urls = process.argv.slice(2); // getting array of urls
+const urls = process.argv.slice(2); // getting array of urls (and CLI_PATH)
+
+// Getting relative path to thingweb.node's cli
+CLI_PATH = urls.shift();
 
 // Creating a express server to get the TDs images and to send the urls to the image generator
 var app = express();

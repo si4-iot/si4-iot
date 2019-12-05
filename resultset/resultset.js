@@ -1,13 +1,17 @@
-var express = require("express");
-var myParser = require("body-parser");
+const childProcess = require('child_process');
 
+// thingweb.node's cli relative path
+// ATENTION: this path is very likely unique for each machine. Please set it correctly
+CLI_PATH = '../../thingweb.node-wot/packages/cli/dist/cli.js';
+
+// td-image-getter.js relative path
 IMG_GETTER_PATH = 'td-image-getter.js';
 
 // urls as program parameters
-const myurl = process.argv.slice(2);
+// const myurl = process.argv.slice(2);
 
 // urls for testing
-// const myurl = ["http://localhost:8080/counter", "http://localhost:8080/sensor"];
+const myurl = ["http://localhost:8080/counter", "http://localhost:8080/sensor"];
 // const myurl = ["http://localhost:8080/counter"];
 // const myurl = ["http://localhost:8080/sensor"];
 // const myurl = ["http://localhost:8080/counter", "http://localhost:8080/sensor", "inviable-example"];
@@ -37,8 +41,8 @@ function ResultSet(tdurls) {
 
         // Creating a child process that will search for the TDs
         // The child will send each received image back to the current process
-        const childProcess = require('child_process');
-        var child = childProcess.fork(IMG_GETTER_PATH, tdurls);
+        imgGetterParams = [CLI_PATH].concat(tdurls);
+        var child = childProcess.fork(IMG_GETTER_PATH, imgGetterParams);
 
         // Received images handler
         child.on('message', img => {
