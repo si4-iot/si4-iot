@@ -1,5 +1,8 @@
 const childProcess = require('child_process');
 
+// Setting working directory to the current resultset.js directory
+process.chdir(__dirname);
+
 // thingweb.node's cli relative path
 // ATENTION: this path is very likely unique for each machine. Please set it correctly
 CLI_PATH = '../../thingweb.node-wot/packages/cli/dist/cli.js';
@@ -10,26 +13,29 @@ IMG_GETTER_PATH = 'td-image-getter.js';
 // urls as program parameters
 // const myurl = process.argv.slice(2);
 
+// Test example:
+// ----------------------------------------------- //
 // urls for testing
-const myurl = ["http://localhost:8080/counter", "http://localhost:8080/sensor"];
+// const myurl = ["http://localhost:8080/counter", "http://localhost:8080/sensor"];
 // const myurl = ["http://localhost:8080/counter"];
 // const myurl = ["http://localhost:8080/sensor"];
 // const myurl = ["http://localhost:8080/counter", "http://localhost:8080/sensor", "inviable-example"];
 // const myurl = [];
 
-ResultSet(myurl).then((img) => {
-    console.log('Resultset ended successfuly');
-    // console.log('images get:', img);
-    for (const i of img) {
-        for (const [name, property] of Object.entries(i.properties)) {
-            console.log(name, property.value);
-        }
-    }
-}, (cause) => {
-    console.log('Rejected:', cause);
-}).catch((err) => { console.error("Resultset failed:", err); });
+// ResultSet(myurl).then((img) => {
+//     console.log('Resultset ended successfuly');
+// //     console.log('images get:', img);
+//     for (const i of img) {
+//         for (const [name, property] of Object.entries(i.properties)) {
+//             console.log(name, property.value);
+//         }
+//     }
+// }, (cause) => {
+//     console.log('Rejected:', cause);
+// }).catch((err) => { console.error("Resultset failed:", err); });
+// ----------------------------------------------- //
 
-function ResultSet(tdurls) {
+export default function ResultSet(tdurls) {
     return new Promise(async (resolve, reject) => {
         var tdImgs = [];                 // TDs awaited images
         var nAwaitedTDs = tdurls.length; // number of urls
@@ -58,7 +64,7 @@ function ResultSet(tdurls) {
         // // Possible time limiter implementation ( NOT TESTED! )
         // setTimeout(() => {
         //     child.kill('SIGINT'); // interrupting child execution
-        //     resolve(tdImgs);      // returning the images
+        //     resolve(tdImgs);      // returning the images got so far
         // }, execTime);
     });
 }
