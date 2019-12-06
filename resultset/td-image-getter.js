@@ -34,3 +34,8 @@ app.listen(DEFAULT_PORT);
 
 // Calling thingweb.node to build the TDs images
 var child = childProcess.fork(CLI_PATH, [CLI_FLAGS, IMG_GENERATOR_PATH]);
+
+// Terminating server when the child exited
+child.on('exit', () => {
+    process.kill(process.pid,'SIGINT');
+});

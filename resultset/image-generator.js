@@ -33,7 +33,7 @@ new Promise((resolve, reject) => {
 			let thing = WoT.consume(td);
 
 			try {
-				// Adding the current value of each readable property to the thing
+				// Adding the current value of each readable property to the TD
 				for (property of Object.values(thing.properties)) {
 					if (!property.writeOnly) {
 						let read = await property.read();

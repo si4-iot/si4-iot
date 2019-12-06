@@ -24,7 +24,6 @@ IMG_GETTER_PATH = 'td-image-getter.js';
 
 // ResultSet(myurl).then((img) => {
 //     console.log('Resultset ended successfuly');
-// //     console.log('images get:', img);
 //     for (const i of img) {
 //         for (const [name, property] of Object.entries(i.properties)) {
 //             console.log(name, property.value);
@@ -35,7 +34,7 @@ IMG_GETTER_PATH = 'td-image-getter.js';
 // }).catch((err) => { console.error("Resultset failed:", err); });
 // ----------------------------------------------- //
 
-export default function ResultSet(tdurls) {
+function ResultSet(tdurls) {
     return new Promise(async (resolve, reject) => {
         var tdImgs = [];                 // TDs awaited images
         var nAwaitedTDs = tdurls.length; // number of urls
@@ -68,3 +67,5 @@ export default function ResultSet(tdurls) {
         // }, execTime);
     });
 }
+
+module.exports = ResultSet
