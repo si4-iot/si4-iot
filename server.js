@@ -10,8 +10,7 @@ const path = require("path");
 
 //Instancia do express:
 const app = express();
-//Porta usada pelo servidor:
-const PORT = process.env.PORT || 4000;
+
 
 //Incluindo o router:
 const tdRoutes = require('./tdRoutes');
@@ -35,12 +34,15 @@ const connection = mongoose.connection;
 if (process.env.NODE_ENV === 'production') {
     console.log("Server in production!")
     //Pasta do estatico
-    app.use(express.static('src/build'));
+    app.use(express.static('front-end/build'));
   
     app.get('*', (req, res) => {
       res.sendFile(path.resolve(__dirname, 'front-end', 'build', 'index.html'));
     });
 }
+
+//Porta usada pelo servidor:
+const PORT = process.env.PORT || 4000;
 
 //Callback ativado assim que a conexao for aberta com sucesso:
 connection.once('open', function() {
