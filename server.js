@@ -30,17 +30,20 @@ app.use('/td', tdRoutes);
 //Referrencia da conexao com o BD:
 const connection = mongoose.connection;
 
+/* ATIVE AO USAR HEROKU 
 // Servidor em modo estatico se estiver 'in production'
 if (process.env.NODE_ENV === 'production') {
     console.log("Server in production!")
+*/
     //Pasta do estatico
     app.use(express.static('front-end/build'));
-  
+
+/* ATIVE AO USAR HEROKU     
     app.get('*', (req, res) => {
       res.sendFile(path.resolve(__dirname, 'front-end', 'build', 'index.html'));
     });
 }
-
+*/
 //Porta usada pelo servidor:
 const PORT = process.env.PORT || 4000;
 
