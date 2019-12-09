@@ -57,11 +57,11 @@ class Add extends Component {
                 console.log('Qtd de dispositivos: '+ this.state.multidescription.length)
                 this.state.multidescription.map(function(currentDescription, i) {
                     var desc = ''
-                    console.log('Thing: '+currentDescription)
+                    //console.log('Thing: '+currentDescription)
                     axios.get(currentDescription)
                         .then(response => {
-                            console.log('Descricao: ' + desc)
                             desc =  response.data
+                            console.log('Descricao: ' + desc)
                             //Adicionando nova descricao via add action
                             this.props.add(desc);
                         })
