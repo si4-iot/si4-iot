@@ -57,22 +57,22 @@ class Add extends Component {
                 console.log('Qtd de dispositivos: '+ this.state.multidescription.length)
                 this.state.multidescription.map(function(currentDescription, i) {
                     var desc = ''
-                    //console.log('Thing: '+currentDescription)
+                    console.log(currentDescription)
                     axios.get(currentDescription)
                         .then(response => {
                             desc =  response.data
-                            console.log('Descricao: ' + desc)
                             //Adicionando nova descricao via add action
                             this.props.add(desc);
+                            console.log('Descricao adicionada: ' + desc)
                         })
                         .catch(function (error) {
-                            console.log('Erro ao obter Descricao');
+                            console.log('Erro ao obter Descricao '+error);
                         })
                     return 0;
                 })
             })
             .catch(function (error) {
-                console.log('Erro ao obter URL');
+                console.log('Erro ao obter URL'+error);
             })
     }
 
