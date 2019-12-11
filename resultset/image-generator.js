@@ -1,3 +1,4 @@
+// Dependencies
 const XMLHttpRequest = require('xmlhttprequest').XMLHttpRequest;
 
 // Difining default used port.
@@ -14,7 +15,7 @@ new Promise((resolve, reject) => {
 				// Parsing urls when received
 				// (JSON.parse don't work because thingweb.node's implementation change the global environment. That's also the reason why process.send() wasn't used to get the urls)
 				urls = xhr.responseText
-				urls = (urls.substring(2,urls.length - 2)).split(',');
+				urls = (urls.substring(2, urls.length - 2)).split(',');
 				resolve(urls);
 			}
 			else {
@@ -27,7 +28,7 @@ new Promise((resolve, reject) => {
 }).then(async (urls) => {
 	// Building the image of each url.
 	for (const url_s of urls) {
-		url = url_s.substring(2,url_s.length -1);
+		url = url_s.substring(2, url_s.length - 1);
 		await WoT.fetch(url).then(async (td) => {
 
 			let thing = WoT.consume(td);
@@ -40,7 +41,12 @@ new Promise((resolve, reject) => {
 						property["value"] = read;
 					}
 				}
-				image = JSON.stringify(thing); 
+				// Adding the current url of the thing to it
+				let curUrl = await thing.forms[0].href;
+				curUrl = curUrl.substring(0, curUrl.length - 15);
+				thing['curUrl'] = curUrl;
+
+				image = JSON.stringify(thing);
 
 				// Sending image back to the td-image-getter
 				let xhr = new XMLHttpRequest();

@@ -1,3 +1,6 @@
+// Module responsible for the building of static images of the current state of a set of things
+
+// Dependencies
 const childProcess = require('child_process');
 
 // Setting working directory to the current resultset.js directory
