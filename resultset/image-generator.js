@@ -1,4 +1,4 @@
-var XMLHttpRequest = require('xmlhttprequest').XMLHttpRequest;
+const XMLHttpRequest = require('xmlhttprequest').XMLHttpRequest;
 
 // Difining default used port.
 // ATENTION: must be equally defined in both td-image-getter.js and image-generator.js files
@@ -43,8 +43,8 @@ new Promise((resolve, reject) => {
 				image = JSON.stringify(thing); 
 
 				// Sending image back to the td-image-getter
-				var xhr = new XMLHttpRequest();
-				var url = "http://localhost:" + DEFAULT_PORT + '/';
+				let xhr = new XMLHttpRequest();
+				let url = "http://localhost:" + DEFAULT_PORT + '/';
 				xhr.open("POST", url, true);
 				xhr.setRequestHeader("Content-Type", "application/json");
 				xhr.send(image);

@@ -68,4 +68,4 @@ function ResultSet(tdurls) {
     });
 }
 
-module.exports = ResultSet
+module.exports = ResultSet;

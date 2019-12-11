@@ -1,6 +1,6 @@
-var express = require("express");
-var myParser = require("body-parser");
-var childProcess = require('child_process');
+const express = require("express");
+const myParser = require("body-parser");
+const childProcess = require('child_process');
 
 // image-generator.js relative path
 IMG_GENERATOR_PATH = 'image-generator.js';
