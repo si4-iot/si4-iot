@@ -1,0 +1,14 @@
+{
+  "name": "si4-iot-rulesengine",
+  "version": "1.0.0",
+  "description": "",
+  "main": "rulesEngine.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "json-rules-engine": "^5.0.0"
+  }
+}
