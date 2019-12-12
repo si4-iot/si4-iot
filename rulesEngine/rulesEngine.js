@@ -7,36 +7,36 @@ const Resultset = require('../resultset');
 // Test example:
 // ----------------------------------------------- //
 // Conditions
-var conditions = {
-    any: [{
-        all: [{
-            fact: 'properties',
-            path: '$.temperature.value',
-            operator: 'greaterThanInclusive',
-            value: 0
-        }, {
-            fact: 'properties',
-            path: '$.temperature.value',
-            operator: 'lessThan',
-            value: 100
-        }]
-    },
-    {
-        fact: 'properties',
-        path: '$.count.value',
-        operator: 'equal',
-        value: 0
-    }]
-}
+// var conditions = {
+//     any: [{
+//         all: [{
+//             fact: 'properties',
+//             path: '$.temperature.value',
+//             operator: 'greaterThanInclusive',
+//             value: 0
+//         }, {
+//             fact: 'properties',
+//             path: '$.temperature.value',
+//             operator: 'lessThan',
+//             value: 100
+//         }]
+//     },
+//     {
+//         fact: 'properties',
+//         path: '$.count.value',
+//         operator: 'equal',
+//         value: 0
+//     }]
+// }
 
-// Urls
-const myurl = ["http://localhost:8080/counter", "http://localhost:8080/sensor"];
+// // Urls
+// const myurl = ["http://localhost:8080/counter", "http://localhost:8080/sensor"];
 
-SelectThings(myurl, conditions).then((selected) => {
-    console.log('Selected Things:', selected);
-}, (cause) => {
-    console.log('Rejected:', cause);
-}).catch(err => { console.error('Error:', err) });
+// SelectThings(myurl, conditions).then((selected) => {
+//     console.log('Selected Things:', selected);
+// }, (cause) => {
+//     console.log('Rejected:', cause);
+// }).catch(err => { console.error('Error:', err) });
 // ----------------------------------------------- //
 
 function SelectThings(urls, conditions) {
