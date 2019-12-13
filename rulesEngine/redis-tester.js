@@ -1,6 +1,5 @@
 const redis = require('redis');
 
-var settings = ['si4-iot/setting01'];
 var urls = ["http://localhost:8080/counter", "http://localhost:8080/sensor"];
 var conditions = {
     any: [{
@@ -19,20 +18,18 @@ var conditions = {
     {
         fact: 'properties',
         path: '$.count.value',
-        operator: 'equal',
+        operator: 'greaterThan',
         value: 0
     }]
 }
+var settings = {
+    'si4-iot/setting01': {
+        'urls': urls,
+        'conditions': conditions
+    }
+}
 
 var publisher = redis.createClient();
-
-publisher.hset('si4-iot/setting01', 'urls', JSON.stringify(urls));
-publisher.hset('si4-iot/setting01', 'conditions', JSON.stringify(conditions));
-publisher.expire('si4-iot/setting01', 60);
-
-// client.hgetall('si4-iot/setting01', function(err, object) {
-//     console.log(object);
-// });
 
 publisher.publish('si4-iot/setting-change-notification', JSON.stringify(settings), () => {
     process.exit(0);
