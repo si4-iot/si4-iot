@@ -41,33 +41,37 @@ const Resultset = require('../resultset');
 
 function SelectThings(urls, conditions) {
     return new Promise(async (resolve, reject) => {
-        let selectedThings = [];
-        let engine = new RuleEngine.Engine();
+        let selectedThings = [];                // array of the urls of the selected things
+        let engine = new RuleEngine.Engine();   // creating a engine
+        // Setting engine's rules
         let rules = new RuleEngine.Rule({
             conditions,
             event: { type: 'selectedThing' },
-            onSuccess: function (event, almanac) {
+            onSuccess: function (event, almanac) {              // set thing as selected
                 almanac.addRuntimeFact('thingSelected', true);
             },
-            onFailure: function (event, almanac) {
+            onFailure: function (event, almanac) {              // set thing as not selected
                 almanac.addRuntimeFact('thingSelected', false);
             }
         });
         engine.addRule(rules);
-        Resultset(urls).then(async (imgs) => {
+
+        Resultset(urls).then(async (imgs) => { // getting things images
             if (imgs == []) {
                 reject('There are no images');
             }
+            // Applying rules for every image
             for (img of imgs) {
                 await engine.run(img).then(async results => {
                     let selected = await results.almanac.factValue('thingSelected');
+                    // Push things urls in the selected things array if this image was selected
                     if (selected == true) {
                         let href = await results.almanac.factValue('curUrl');
                         selectedThings.push(href);
                     }
                 });
             }
-            resolve(selectedThings);
+            resolve(selectedThings); // returning selected things urls
         }, (cause) => { reject('Resultset rejected: ' + cause); })
             .catch((err) => { console.error("Resultset failed:", err); });
     });
