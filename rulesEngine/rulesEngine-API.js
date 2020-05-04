@@ -1,6 +1,9 @@
 // API for the rulesEngine server
 
+// Current machine url: 172.31.47.144
+
 const express = require('express');
+const bodyParser = require('body-parser');
 const fs = require('fs');
 const crypto = require('crypto');
 
@@ -25,6 +28,16 @@ function save_Scenes() {
     });
 }
 
+// Get a scene from the database
+function read_Scene(id) {
+    return scenes[id];
+}
+
+// Get all scenes from the database
+function read_All_Scenes() {
+    return scenes;
+}
+
 // Random scene ID genarator
 function new_Scene() {
     return crypto.randomBytes(DEFAULT_ID_SIZE/2).toString('hex');
@@ -47,39 +60,45 @@ function delete_Scene(id) {
     save_Scenes();
 }
 
-//---------- API config ----------
+//---------- API config ---------- 
 
 const app = express();
 app.use(express.json());
+app.use(bodyParser.urlencoded({extended: true}));
 
 // Returns all scenes images
-app.get('/images', function(req, res) {
-    res.json(scenes);
+app.get('/scenes', function(req, res) {
+    var data = read_All_Scenes();
+
+    res.json(data);
 });
 
 // Return one scene image
-app.get('/images/:id', function(req, res) {
-    var { id } = req.params;
-    var scene = scenes[id];
+app.get('/scenes/:id', function(req, res) {
+    var id = req.params.id;
+    var scene = read_Scene(id);
 
     res.json(scene);
 });
 
 // Request a new scene
-app.post('/images', (req, res) => {
+app.post('/scenes', (req, res) => {
     var urls = req.body.urls;
     var conditions = req.body.conditions;
 
+    console.log('urls:\n', urls);
+    console.log('conditions:\n', conditions);
+
     var id = new_Scene();
 
-    add_Scene(id, urls, conditions);
+    // add_Scene(id, urls, conditions);
 
     res.json(id);
 });
 
 // Update a scene
-app.put('/images/:id', (req, res) => {
-    var { id } = req.params;
+app.put('/scenes/:id', (req, res) => {
+    var id = req.params.id;
     var urls = req.body.urls;
     var conditions = req.body.conditions;
 
@@ -87,13 +106,13 @@ app.put('/images/:id', (req, res) => {
 });
 
 // Delete a scene
-app.delete('/images/:id', (req, res) => {
-    var { id } = req.params;
+app.delete('/scenes/:id', (req, res) => {
+    var id = req.params.id;
 
     delete_Scene(id);
 });
 
 
 app.listen(DEFAULT_PORT, () => {
-    console.log('Server running');
+    console.log('Server running on port ', DEFAULT_PORT);
 });
