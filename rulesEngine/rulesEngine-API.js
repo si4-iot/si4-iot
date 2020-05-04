@@ -86,13 +86,13 @@ app.post('/scenes', (req, res) => {
     var urls = req.body.urls;
     var conditions = req.body.conditions;
 
-    console.log('body:\n', req.body);
+    console.log('POST message received.');
     console.log('urls:\n', urls);
     console.log('conditions:\n', conditions);
 
     var id = new_Scene();
 
-    // add_Scene(id, urls, conditions);
+    add_Scene(id, urls, conditions);
 
     res.json(id);
 });
