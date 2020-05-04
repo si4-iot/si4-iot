@@ -86,6 +86,7 @@ app.post('/scenes', (req, res) => {
     var urls = req.body.urls;
     var conditions = req.body.conditions;
 
+    console.log('body:\n', req.body);
     console.log('urls:\n', urls);
     console.log('conditions:\n', conditions);
 
