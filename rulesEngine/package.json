@@ -13,6 +13,7 @@
     "express": "^4.17.1",
     "fs": "0.0.1-security",
     "json-rules-engine": "^5.0.0",
-    "redis": "^2.8.0"
+    "redis": "^2.8.0",
+    "xmlhttprequest": "^1.8.0"
   }
 }
