@@ -1,0 +1,89 @@
+{
+  "@context": "https://www.w3.org/2019/wot/td/v1",
+  "title": "LedTempHumMqtt",
+  "id": "urn:dev:ic:flow:jsonTemperatureHumiditySensorMQTT",
+  "securityDefinitions": {"nosec_sc": {"scheme": "nosec"}},
+  "security": ["nosec_sc"],
+  "properties": {
+    "subscription": {
+      "description": "topic that the device receive messages of another dispositive",
+      "contentType": "string",
+      "enum": [{"topico":"user-provided topic", "acao": "number that represents a action"},{"topico":"user-provided topic", "acao": "info"}],
+      "forms": [
+        {
+          "op": "readproperty",
+          "href": "mqtt://mqtt.eclipse.org/SalgadoRecebe",
+          "contentType": "application/json",
+          "cov:methodName": "subscribe"
+        }
+      ]
+    }
+  },
+  "actions": {
+    "LED-Off": {
+      "description": "Turn off the led and receive a confirmation message by the topic of your choice",
+      "contentType": "application/json",
+      "enum": [{"topico":"user-provided topic","acao": 0}],
+      "forms": [
+        {
+          "href": "mqtt://mqtt.eclipse.org/SalgadoRecebe",
+          "type": "application/json",
+          "cov:methodName": "publish"
+        }
+      ]
+    },
+    "LED-On": {
+      "description": "Turn on the led and receive a confirmation message by the topic of your choice",
+      "contentType": "application/json",
+      "enum": [{"topico":"user-provided topic","acao": 1}],
+      "forms": [
+        {
+          "href": "mqtt://mqtt.eclipse.org/SalgadoRecebe",
+          "type": "application/json",
+          "cov:methodName": "publish"
+        }
+      ]
+    },
+    "dht11": {
+      "description": "Send to a topic chose by the user the current temperature and humidity of the sensor dht11",
+      "contentType": "application/json",
+      "enum": [{"topico":"user-provided topic","acao": 2}],
+      "forms": [
+        {
+          "href": "mqtt://mqtt.eclipse.org/SalgadoRecebe",
+          "type": "application/json",
+          "cov:methodName": "publish",
+          "unit": "°C and % of humidity of the air"
+        }
+      ]
+    },
+    "dht22": {
+      "description": "Send to a topic chose by the user the current temperature and humidity of the sensor dht22",
+      "contentType": "application/json",
+      "enum": [{"topico":"user-provided topic","acao": 3}],
+      "forms": [
+        {
+          "href": "mqtt://mqtt.eclipse.org/SalgadoRecebe",
+          "type": "application/json",
+          "cov:methodName": "publish",
+          "unit": "°C and % of humidity of the air"
+        }
+      ]
+    }
+  },
+  "events" : {
+    "overheating" : {
+      "description" : "System detects critical temperature (overheating)",
+      "data" : {
+        "type": "application/json"
+      },
+      "forms": [
+        {
+          "href": "mqtt://mqtt.eclipse.org/Alarme",
+          "contentType": "application/json",
+          "op": "subscribeevent"
+        }
+      ]
+    }
+  }
+}

@@ -1,0 +1,74 @@
+{
+  "@context": [
+    "https://www.w3.org/2019/wot/td/v1",
+    {
+      "cov": "http://www.example.org/coap-binding#"
+    }
+  ],
+  "id": "urn:dev:ic:flow:jsonTemperatureHumiditySensorWeb",
+  "title": "LedTempHum",
+  "description": "Sensing led, temperature, humidity",
+  "securityDefinitions": {
+    "nosec_sc": {
+      "scheme": "nosec"
+    }
+  },
+  "security": "nosec_sc",
+  "properties": {
+    "status-led": {
+      "description": "Shows the current status of the led",
+      "contentType": "string",
+      "enum": [
+        "on",
+        "off"
+      ],
+      "forms": [
+        {
+          "op": "readproperty",
+          "href": "coap://IP:5683/ligthled",
+          "cov:methodName": "GET"
+        }
+      ]
+    },
+    "status-dht11": {
+      "description": "Shows the current temperature and humidity of the sensor DHT11",
+      "type": "application/json",
+      "forms": [
+        {
+          "op": "readproperty",
+          "href": "coap://IP/dht11",
+          "cov:methodName": "GET",
+          "unit": "°C and % of humidity of the air"
+        }
+      ]
+    },
+    "status-dht22": {
+      "description": "Shows the current temperature and humidity of the sensor DHT22",
+      "contentType": "application/json",
+      "forms": [
+        {
+          "op": "readproperty",
+          "href": "coap://IP:5683/dht22",
+          "cov:methodName": "GET",
+          "unit": "°C and % of humidity of the air"
+        }
+      ]
+    }
+  },
+  "actions": {
+    "toggle": {
+      "description": "Turn on or off the led",
+      "contentType": "string",
+      "enum": [
+        "on",
+        "off"
+      ],
+      "forms": [
+        {
+          "href": "coap://IP:5683/lightled",
+          "cov:methodName": "POST"
+        }
+      ]
+    }
+  }
+}
