@@ -14,7 +14,7 @@ function selectThings(urls, conditions) {
             reject('I shaw never reject.');
         }
         
-    }
+    });
 }
 
 // Starting server that listen for scenes update notifications
