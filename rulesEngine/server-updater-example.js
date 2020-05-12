@@ -41,6 +41,6 @@ var scenes = {
 var publisher = redis.createClient();
 
 // Publishing the scenes set to a rules engine server
-publisher.publish('si4-iot/scene-change-notification', JSON.stringify(scenes), () => {
+publisher.publish('si4-iot/scene-update-notification', JSON.stringify(scenes), () => {
     process.exit(0);
 });

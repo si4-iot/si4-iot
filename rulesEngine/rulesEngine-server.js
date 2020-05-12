@@ -28,7 +28,7 @@ client.on('error', (err) => {
 
 // Setting server actions
 server.on('message', (channel, message) => {
-    if (channel == 'si4-iot/scene-change-notification') { // on scene update notifications
+    if (channel == 'si4-iot/scene-update-notification') { // on scene update notifications
         let scenes = JSON.parse(message);                 // get scenes
         for (const [name, info] of Object.entries(scenes)) {
             // Filtering scene things by the scene conditions
@@ -41,5 +41,5 @@ server.on('message', (channel, message) => {
     }
 });
 
-// Subscribing server to scenes change notification channel
-server.subscribe('si4-iot/scene-change-notification');
+// Subscribing server to scene update notification channel
+server.subscribe('si4-iot/scene-update-notification');
