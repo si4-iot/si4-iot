@@ -24,7 +24,7 @@ var conditions = {
     {
         fact: 'properties',
         path: '$.count.value',
-        operator: 'greaterThan',
+        operator: 'greaterThanInclusive',
         value: 0
     }]
 }
