@@ -5,7 +5,7 @@ const redis = require('redis');
 
 // Setting requested variables
 // array of disired things urls
-var urls = ["http://localhost:8080/counter", "http://localhost:8080/sensor"];
+var urls = ["http://localhost:8080/counter"];//, "http://localhost:8080/sensor"];
 // filtering conditions (in json-rules-engines format)
 var conditions = {
     any: [{
