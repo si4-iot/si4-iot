@@ -29,15 +29,17 @@ new Promise((resolve, reject) => {
 	// Building the image of each url.
 	for (const url_s of urls) {
 		url = url_s.substring(2, url_s.length - 1);
-		await WoT.fetch(url).then(async (td) => {
+		await WoTHelpers.fetch(url).then(async (td) => {
 
-			let thing = WoT.consume(td);
+			let thing = await WoT.consume(td);
 
 			try {
 				// Adding the current value of each readable property to the TD
-				for (property of Object.values(thing.properties)) {
+				// for (property of Object.values(thing.properties)) {
+				for (const [name, property] of Object.entries(thing.properties)) {
 					if (!property.writeOnly) {
-						let read = await property.read();
+						// let read = await property.read();
+						let read = await thing.readProperty(name);
 						property["value"] = read;
 					}
 				}
