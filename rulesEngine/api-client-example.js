@@ -3,7 +3,7 @@ const xhr = new XMLHttpRequest();
 
 // Destination IP
 // const ADRESS = '18.216.2.4';
-const TEST = "localhost"
+const ADRESS = "localhost"
 
 // Test machines IPs
 // const TEST = '192.168.15.5'
