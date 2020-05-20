@@ -56,6 +56,7 @@ WoT.produce({
     thing.setActionHandler("change_humidity", (params, options) => {
         return thing.writeProperty("humidity", Math.random() * 200);
     });
+    thing.expose().then(() => { console.info(thing.getThingDescription().title + " ready"); });
 }).catch((e) => {
     console.log(e);
 });
