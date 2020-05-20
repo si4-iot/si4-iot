@@ -70,14 +70,14 @@ app.use(bodyParser.urlencoded({ extended: true }));
 // Creating redis publisher
 var publisher = redis.createClient();
 
-// Returns all scenes images
+// Returns all scenes in the database
 app.get('/scenes', function (req, res) {
     var data = read_All_Scenes();
 
     res.json(data);
 });
 
-// Return one scene image
+// Return selected scene's image
 app.get('/scenes/:id', function (req, res) {
     var id = req.params.id;
     var scene = read_Scene(id);
@@ -146,3 +146,20 @@ app.delete('/scenes/:id', (req, res) => {
 app.listen(DEFAULT_PORT, () => {
     console.log('Server running on port ', DEFAULT_PORT);
 });
+
+
+
+
+/********+ LUCAS SUA PARTE COMEÇA AQUI +********/ 
+
+
+// Retorna uma lista de url_devices que atendem aos critérios da string de busca
+app.get('/thingdescription', function (req, res) {
+    string_busca = req.body.string_busca;
+});
+
+// Recebe a URL, faz a requisição do TD e o persiste em um banco de dados
+app.post('/thingdescription', (req, res) => {
+    url_divice = req.body.url_device;
+});
+
