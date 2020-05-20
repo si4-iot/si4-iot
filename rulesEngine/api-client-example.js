@@ -49,10 +49,15 @@ xhr.onreadystatechange = () => {
     }
 }
 
-// xhr.open("POST", "http://172.31.47.144:3000/scenes", true);
+// POST
 xhr.open("POST", "http://"+ADRESS+":3000/scenes", true);
 xhr.setRequestHeader('Content-Type', 'application/json');
 xhr.send(JSON.stringify({
     urls: urls,
     conditions: conditions
 }));
+
+// GET
+// xhr.open("GET", "http://"+ADRESS+":3000/scenes", true);
+// xhr.setRequestHeader('Content-Type', 'application/json');
+// xhr.send();
