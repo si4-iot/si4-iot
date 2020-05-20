@@ -2,13 +2,16 @@ const XMLHttpRequest = require('xmlhttprequest').XMLHttpRequest;
 const xhr = new XMLHttpRequest();
 
 // Destination IP
-const ADRESS = '18.216.2.4';
+// const ADRESS = '18.216.2.4';
+const TEST = "localhost"
 
 // Test machines IPs
-const TEST_1 = '192.168.15.5'
+// const TEST = '192.168.15.5'
+const TEST = "localhost"
+// const TEST = '' // Lucas, pode colocar seu ip aqui para fazer os testes
 
 // array of disired things urls
-var urls = ["http://"+TEST_1+":8080/counter", "http://"+TEST_1+":8080/sensor"];
+var urls = ["http://"+TEST+":8080/counter", "http://"+TEST+":8080/sensor"];
 // filtering conditions (in json-rules-engines format)
 var conditions = {
     any: [{
@@ -36,7 +39,7 @@ xhr.onreadystatechange = () => {
     if (xhr.readyState == 4) {
         console.log('status: ', xhr.status);
         if (xhr.status == 200) {
-            console.log('Got response:');
+            console.log('Got response:\n');
             console.log(xhr.responseText);
         }
         else {
