@@ -2,20 +2,20 @@
 
 // Module dependencies
 const redis = require('redis');
-// const selectThings = require('./rulesEngine');
+const selectThings = require('./rulesEngine');
 
 // Alternate function for API tests
-function selectThings(urls, conditions) {
-    return new Promise(async (resolve, reject) => {
-        var ans = 'Server got update request.\nReceived info:\nurls:\n'+urls+'\nconditions:\n'+conditions;
-        if(true) {
-            resolve(ans);
-        } else {
-            reject('I shaw never reject.');
-        }
+// function selectThings(urls, conditions) {
+//     return new Promise(async (resolve, reject) => {
+//         var ans = 'Server got update request.\nReceived info:\nurls:\n'+urls+'\nconditions:\n'+conditions;
+//         if(true) {
+//             resolve(ans);
+//         } else {
+//             reject('I shaw never reject.');
+//         }
         
-    });
-}
+//     });
+// }
 
 // Starting server that listen for scenes update notifications
 var server = redis.createClient();
