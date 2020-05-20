@@ -50,6 +50,7 @@ function add_Scene(id, urls, conditions) {
         'urls': urls,
         'conditions': conditions
     }
+    console.log('scenes:\n', scenes);
 
     save_Scenes();
 }
