@@ -188,7 +188,7 @@ app.post('/thingdescription', (req, res) => {
 
     xhr.onreadystatechange = processRequest;
 
-    res.sendStatus(200);//preci mexer melhor nas respostas, ele só está dizendo que deu certo o tempo todo
-    
+    res.sendStatus(200);//preciso mexer melhor nas respostas, ele só está dizendo que deu certo o tempo todo
+    // ainda falta colocar alguma forma dele nã repetir TDs no banco
 });
 

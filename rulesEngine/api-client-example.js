@@ -62,7 +62,7 @@ xhr.send(JSON.stringify({
 
 }));*/
 
-xhr.open("POST", "http://"+ADRESS+":3000/thingdescription",true);
+xhr.open("POST", "http://"+ADRESS+":3000/thingdescription",true); // teste do POST para envio da url do TD
 xhr.setRequestHeader('Content-Type', 'application/json');
 xhr.send(JSON.stringify({
     url_device: url_device
