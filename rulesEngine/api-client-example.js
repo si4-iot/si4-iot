@@ -3,9 +3,13 @@ const xhr = new XMLHttpRequest();
 
 // Destination IP
 const ADRESS = '192.168.0.108';
+// const ADRESS = '18.216.2.4';
+//const ADRESS = "localhost"
 
 // Test machines IPs
-const TEST_1 = '192.168.15.5'
+// const TEST = '192.168.15.5'
+const TEST = "localhost"
+// const TEST = '192.168.0.108' // Lucas, pode colocar seu ip aqui para fazer os testes
 
 // array of disired things urls
 var urls = ["http://"+TEST_1+":8080/counter", "http://"+TEST_1+":8080/sensor"];
@@ -37,7 +41,7 @@ xhr.onreadystatechange = () => {
     if (xhr.readyState == 4) {
         console.log('status: ', xhr.status);
         if (xhr.status == 200) {
-            console.log('Got response:');
+            console.log('Got response:\n');
             console.log(xhr.responseText);
         }
         else {
@@ -49,6 +53,8 @@ xhr.onreadystatechange = () => {
 
 // xhr.open("POST", "http://172.31.47.144:3000/scenes", true);
 /*xhr.open("POST", "http://"+ADRESS+":3000/scenes", true);
+// POST
+xhr.open("POST", "http://"+ADRESS+":3000/scenes", true);
 xhr.setRequestHeader('Content-Type', 'application/json');
 xhr.send(JSON.stringify({
     urls: urls,
@@ -61,3 +67,8 @@ xhr.setRequestHeader('Content-Type', 'application/json');
 xhr.send(JSON.stringify({
     url_device: url_device
 }));
+
+// GET
+// xhr.open("GET", "http://"+ADRESS+":3000/scenes", true);
+// xhr.setRequestHeader('Content-Type', 'application/json');
+// xhr.send();
