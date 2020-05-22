@@ -21,7 +21,7 @@ const scenes = require('./scenes.json');
 function save_Scenes() {
     var jsonContent = JSON.stringify(scenes);
 
-    fs.writeFile("../rulesEngine/scenes.json", jsonContent, 'utf8', function (err) {
+    fs.writeFile("./scenes.json", jsonContent, 'utf8', function (err) {
         if (err) {
             console.log("Error: data not saved.");
             return console.log(err);
