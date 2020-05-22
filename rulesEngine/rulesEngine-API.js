@@ -152,14 +152,66 @@ app.listen(DEFAULT_PORT, () => {
 
 /********+ LUCAS SUA PARTE COMEÇA AQUI +********/ 
 
+//configurando o mongodb
+const MongoClient = require('mongodb').MongoClient;
+const assert = require('assert');
+// URL de conexão
+const url = 'mongodb://localhost:27017';
+// Nome do banco de dados
+const dbName = 'si4-iot';
+// Create a new MongoClient
+const client = new MongoClient(url);
+
+//configurando a conexão http
+const XMLHttpRequest = require('xmlhttprequest').XMLHttpRequest;
+const xhr = new XMLHttpRequest();
+var response = "teste";
+
+//---------- Funcoes auxiliares ----------------
+function processRequest(e) {
+    if (xhr.readyState == 4 && xhr.status == 200) 
+    {
+        response = JSON.parse(xhr.responseText);
+        connect_db(response);
+    }
+}
+
+function connect_db(response) {
+    
+    client.connect(function(err) {
+        assert.equal(null, err);
+        console.log("Connected successfully to server");
+      
+        const db = client.db(dbName);
+
+        db.collection('TD').insertOne(response, function(err, r) {
+            assert.equal(null, err);
+            assert.equal(1, r.insertedCount);
+
+        });
+      
+        client.close();
+    });
+
+}
 
 // Retorna uma lista de url_devices que atendem aos critérios da string de busca
 app.get('/thingdescription', function (req, res) {
-    string_busca = req.body.string_busca;
+    var string_busca = req.body.string_busca;
 });
 
 // Recebe a URL, faz a requisição do TD e o persiste em um banco de dados
 app.post('/thingdescription', (req, res) => {
-    url_divice = req.body.url_device;
+    url_device = req.body.url_device;
+
+    console.log(url_device);
+
+    xhr.open('GET', url_device, true);
+    xhr.send();
+
+    xhr.onreadystatechange = processRequest;
+
+    res.sendStatus(200);//preci mexer melhor nas respostas, ele só está dizendo que deu certo o tempo todo
+    
 });
 
