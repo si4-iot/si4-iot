@@ -171,12 +171,18 @@ function connect_db(response) {
 
 }
 
+//--------------------- API Config ---------------------------------
+
 // Retorna uma lista de url_devices que atendem aos critérios da string de busca
 app.get('/thingdescription', function (req, res) {
     var string_busca = req.body.string_busca;
 });
 
 // Recebe a URL, faz a requisição do TD e o persiste em um banco de dados
+// Para que o banco nosql mongodb não insira documentos repetidos, é necessário que
+// Seja criado um Index com uma regra de não duplicidade
+// Por exemplo "db.TD.createIndex({"title": 1}, { unique: true})" 
+// Esse comando impede que documentos com o campo "title" recebam um mesmo valor em uma coleção
 app.post('/thingdescription', (req, res) => {
     url_device = req.body.url_device;
 
@@ -185,9 +191,9 @@ app.post('/thingdescription', (req, res) => {
     xhr.open('GET', url_device, true);
     xhr.send();
 
-    xhr.onreadystatechange = processRequest;
+    xhr.onreadystatechange = processRequest();
 
     res.sendStatus(200);//preciso mexer melhor nas respostas, ele só está dizendo que deu certo o tempo todo
-    // ainda falta colocar alguma forma dele nã repetir TDs no banco
+
 });
 

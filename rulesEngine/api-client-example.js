@@ -12,7 +12,7 @@ const TEST = "localhost"
 // const TEST = '192.168.0.108' // Lucas, pode colocar seu ip aqui para fazer os testes
 
 // array of disired things urls
-var urls = ["http://"+TEST_1+":8080/counter", "http://"+TEST_1+":8080/sensor"];
+var urls = ["http://"+TEST+":8080/counter", "http://"+TEST+":8080/sensor"];
 var url_device = "http://ec2-3-18-220-42.us-east-2.compute.amazonaws.com:8080/device_114a2276";
 // filtering conditions (in json-rules-engines format)
 var conditions = {
