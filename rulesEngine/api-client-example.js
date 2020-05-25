@@ -13,7 +13,17 @@ const TEST = "localhost"
 
 // array of disired things urls
 var urls = ["http://"+TEST+":8080/counter", "http://"+TEST+":8080/sensor"];
-var url_device = "http://ec2-3-18-220-42.us-east-2.compute.amazonaws.com:8080/device_114a2276";
+const url_device1 = "http://ec2-3-18-220-42.us-east-2.compute.amazonaws.com:8080/device_101a4202";
+const url_device2 = "http://ec2-3-18-220-42.us-east-2.compute.amazonaws.com:8080/device_102a3096";
+const url_device3 = "http://ec2-3-18-220-42.us-east-2.compute.amazonaws.com:8080/device_102a1759";
+const url_device4 = "http://ec2-3-18-220-42.us-east-2.compute.amazonaws.com:8080/device_103a1599";
+const url_device5 = "http://ec2-3-18-220-42.us-east-2.compute.amazonaws.com:8080/device_103a3343";
+const url_device6 = "http://ec2-3-18-220-42.us-east-2.compute.amazonaws.com:8080/device_104a9248";
+const url_device7 = "http://ec2-3-18-220-42.us-east-2.compute.amazonaws.com:8080/device_106a8455";
+const url_device8 = "http://ec2-3-18-220-42.us-east-2.compute.amazonaws.com:8080/device_112a8832";
+const url_device9 = "http://ec2-3-18-220-42.us-east-2.compute.amazonaws.com:8080/device_113a6082";
+const url_device10 = "http://ec2-3-18-220-42.us-east-2.compute.amazonaws.com:8080/device_114a2276";
+
 // filtering conditions (in json-rules-engines format)
 var conditions = {
     any: [{
@@ -65,7 +75,7 @@ xhr.send(JSON.stringify({
 xhr.open("POST", "http://"+ADRESS+":3000/thingdescription",true); // teste do POST para envio da url do TD
 xhr.setRequestHeader('Content-Type', 'application/json');
 xhr.send(JSON.stringify({
-    url_device: url_device
+    url_device: url_device10
 }));
 
 // GET

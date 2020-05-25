@@ -130,18 +130,18 @@ app.listen(DEFAULT_PORT, () => {
 
 //configurando o mongodb
 const MongoClient = require('mongodb').MongoClient;
-const assert = require('assert');
+//const assert = require('assert');
 // URL de conexão
 const url = 'mongodb://localhost:27017';
 // Nome do banco de dados
 const dbName = 'si4-iot';
+// Nome da Coleção
+const dbCollection = 'TD';
 // Create a new MongoClient
 const client = new MongoClient(url);
-
 //configurando a conexão http
 const XMLHttpRequest = require('xmlhttprequest').XMLHttpRequest;
 const xhr = new XMLHttpRequest();
-var response = "teste";
 
 //---------- Funcoes auxiliares ----------------
 function processRequest(e) {
@@ -154,20 +154,15 @@ function processRequest(e) {
 
 function connect_db(response) {
     
-    client.connect(function(err) {
-        assert.equal(null, err);
-        console.log("Connected successfully to server");
-      
-        const db = client.db(dbName);
-
-        db.collection('TD').insertOne(response, function(err, r) {
-            assert.equal(null, err);
-            assert.equal(1, r.insertedCount);
-
+    MongoClient.connect(url, function(err, db) {
+        if (err) throw err;
+        var dbo = db.db(dbName);
+        dbo.collection(dbCollection).insertOne(response, function(err, res) {
+          if (err) throw err;
+          console.log("documento inserido");
+          db.close();
         });
-      
-        client.close();
-    });
+      });
 
 }
 
@@ -179,21 +174,14 @@ app.get('/thingdescription', function (req, res) {
 });
 
 // Recebe a URL, faz a requisição do TD e o persiste em um banco de dados
-// Para que o banco nosql mongodb não insira documentos repetidos, é necessário que
-// Seja criado um Index com uma regra de não duplicidade
-// Por exemplo "db.TD.createIndex({"title": 1}, { unique: true})" 
-// Esse comando impede que documentos com o campo "title" recebam um mesmo valor em uma coleção
 app.post('/thingdescription', (req, res) => {
     url_device = req.body.url_device;
-
-    console.log(url_device);
 
     xhr.open('GET', url_device, true);
     xhr.send();
 
-    xhr.onreadystatechange = processRequest();
-
-    res.sendStatus(200);//preciso mexer melhor nas respostas, ele só está dizendo que deu certo o tempo todo
+    xhr.onreadystatechange = processRequest;
+    res.status(200).send('conectado com sucesso');
 
 });
 
