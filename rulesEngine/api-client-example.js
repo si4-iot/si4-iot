@@ -47,6 +47,27 @@ var conditions = {
     }]
 }
 
+// Eu comecei a perceber que objetos imediatos funciona, objetos dentro de outros objetos não funciona
+//por exemplo: o campo 'title' é um campo imediato, não há hierarquia
+//mas por outro lado, o campo 'unit of measurement' não funciona por estar dentro de um hierarquia
+//quando o objeto é uma hierarquia fechada como o campo 'securityDefinition' ele funciona
+var string_busca = {
+    //"title": "device_101a4202" // isso funciona
+    //"unit of measurement": "geo:Point" // isso não funciona
+    //"saref": "https://w3id.org/saref" // isso não funciona
+    //"@type": "Thing" // isso funciona
+    /*"security": [
+        "nosec_sc"
+    ] */// isso funciona
+    //"observable": false //  isso não funciona
+    //"id": "urn:uuid:4d7a8da9-2f4b-4fc1-bac5-f9a59a29b17a" // isso funciona
+    /*"securityDefinitions": {
+        "nosec_sc": {
+          "scheme": "nosec"
+        }
+    }*/ // isso funciona
+}
+
 xhr.onreadystatechange = () => {
     if (xhr.readyState == 4) {
         console.log('status: ', xhr.status);
@@ -72,13 +93,21 @@ xhr.send(JSON.stringify({
 
 }));*/
 
-xhr.open("POST", "http://"+ADRESS+":3000/thingdescription",true); // teste do POST para envio da url do TD
-xhr.setRequestHeader('Content-Type', 'application/json');
-xhr.send(JSON.stringify({
-    url_device: url_device10
-}));
-
 // GET
 // xhr.open("GET", "http://"+ADRESS+":3000/scenes", true);
 // xhr.setRequestHeader('Content-Type', 'application/json');
 // xhr.send();
+
+// Teste de envio da url a ser armazenada no banco de dados
+/*xhr.open("POST", "http://"+ADRESS+":3000/thingdescription",true); 
+xhr.setRequestHeader('Content-Type', 'application/json');
+xhr.send(JSON.stringify({
+    url_device: url_device10
+}));*/
+
+//Teste de string de busca como filtro de busca no banco
+xhr.open("POST", "http://"+ADRESS+":3000/thingdescription/:filtro",true);
+xhr.setRequestHeader('Content-Type', 'application/json');
+xhr.send(JSON.stringify({
+    string_busca: string_busca
+}));

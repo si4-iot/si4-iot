@@ -166,11 +166,35 @@ function connect_db(response) {
 
 }
 
+function filter_db(string_busca) {
+
+    MongoClient.connect(url, function(err, db) {
+        if (err) throw err;
+        var dbo = db.db(dbName);
+        console.info(JSON.stringify(string_busca) + ' agora funcionou');
+        dbo.collection(dbCollection).find(string_busca, { projection: { _id: 0 }}).toArray(function(err, result) {
+            
+            if (err) throw err;
+            let data = JSON.stringify(result, null, 2);
+            fs.writeFileSync('TDs.json', data);
+            console.log('Arquivo Salvo');
+
+            db.close();
+        });
+    });
+
+}
+
 //--------------------- API Config ---------------------------------
 
 // Retorna uma lista de url_devices que atendem aos critérios da string de busca
-app.get('/thingdescription', function (req, res) {
-    var string_busca = req.body.string_busca;
+app.post('/thingdescription/:filtro', (req, res) => {
+    string_busca = req.body.string_busca;
+    console.info(string_busca);
+
+    filter_db(string_busca);
+
+    res.status(200).send('conectado com sucesso');
 });
 
 // Recebe a URL, faz a requisição do TD e o persiste em um banco de dados
