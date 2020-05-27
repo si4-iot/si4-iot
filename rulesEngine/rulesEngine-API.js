@@ -15,6 +15,19 @@ const DEFAULT_ID_SIZE = 8;
 // Database start
 const scenes = require('./scenes.json');
 
+// Conditions forms
+const cond_forms = [
+    'conditions', 'condition',
+    'rules', 'rule',
+    'condicoes', 'condicao',
+    'regras', 'regra'
+]
+
+// URLs forms
+const urls_forms = [
+    'urls', 'url',
+]
+
 //---------- Auxiliar functions ---------- //
 
 // Update database
@@ -77,7 +90,22 @@ app.get('/scenes', function (req, res) {
 // Return selected scene's image
 app.get('/scenes/:id', function (req, res) {
     var id = req.params.id;
+    var error_flag = false;
+    var error_log = '';
+
     var scene = read_Scene(id);
+
+    // Error handling
+    if(!scene) return res.status(204).json();
+    if(!scene.urls) {
+        error_flag = true;
+        error_log + 'URLs missing. ';
+    }
+    if(!scene.conditions) {
+        error_flag = true;
+        error_log + 'Conditions missing. ';
+    }
+    if(error_flag) return res.status(500).json(error_log + 'Please set all missing information with a PUT request.');
 
     selectThings(scene.urls, scene.conditions).then(selectedTDs => {
         res.json(selectedTDs); // returning selected things
@@ -91,15 +119,11 @@ app.post('/scenes', (req, res) => {
     var urls = req.body.urls;
     var conditions = req.body.conditions;
 
-    console.log('POST message received.');
-    console.log('urls:\n', urls);
-    console.log('conditions:\n', conditions);
-
     var id = new_Scene();
 
     add_Scene(id, urls, conditions);
 
-    res.json(id);
+    res.status(201).json(id);
 });
 
 // Update a scene
@@ -108,14 +132,24 @@ app.put('/scenes/:id', (req, res) => {
     var urls = req.body.urls;
     var conditions = req.body.conditions;
 
+    var scene = read_Scene(id);
+    if(!scene) return res.status(204).json();
+
     add_Scene(id, urls, conditions);
+
+    res.end();
 });
 
 // Delete a scene
 app.delete('/scenes/:id', (req, res) => {
     var id = req.params.id;
 
+    var scene = read_Scene(id);
+    if(!scene) return res.status(204).json();
+
     delete_Scene(id);
+
+    res.end();
 });
 
 
