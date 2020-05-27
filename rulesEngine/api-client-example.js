@@ -48,24 +48,20 @@ var conditions = {
 }
 
 // Eu comecei a perceber que objetos imediatos funciona, objetos dentro de outros objetos não funciona
-//por exemplo: o campo 'title' é um campo imediato, não há hierarquia
+// Por exemplo: o campo 'title' é um campo imediato, não há hierarquia
 //mas por outro lado, o campo 'unit of measurement' não funciona por estar dentro de um hierarquia
-//quando o objeto é uma hierarquia fechada como o campo 'securityDefinition' ele funciona
+// Quando o objeto é uma hierarquia fechada como o campo 'securityDefinition' ele funciona
+// Para fazer funcionar por exemplo o campo 'unit of measurement', é preciso dar o caminho
+//dentro do documento, assim ficando properties >> gps>> unit of measurement: 'geo:Point'
+//dessa forma se escreve o objeto assim, properties.gps.unit of measurement: 'geo:Point'
 var string_busca = {
     //"title": "device_101a4202" // isso funciona
-    //"unit of measurement": "geo:Point" // isso não funciona
-    //"saref": "https://w3id.org/saref" // isso não funciona
-    //"@type": "Thing" // isso funciona
-    /*"security": [
-        "nosec_sc"
-    ] */// isso funciona
-    //"observable": false //  isso não funciona
-    //"id": "urn:uuid:4d7a8da9-2f4b-4fc1-bac5-f9a59a29b17a" // isso funciona
-    /*"securityDefinitions": {
-        "nosec_sc": {
-          "scheme": "nosec"
-        }
-    }*/ // isso funciona
+    //"properties.gps.unit of measurement": "geo:Point" // elemento único de um documento
+    //"properties.humidity.unit of measurement": "m3-lite:Humidity" // elemento único de um documento
+    $or:[
+    {"properties.gps.unit of measurement": "geo:Point"},
+    {"properties.humidity.unit of measurement": "m3-lite:Humidity"}
+    ]
 }
 
 xhr.onreadystatechange = () => {
