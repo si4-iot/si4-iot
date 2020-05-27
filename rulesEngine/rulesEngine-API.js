@@ -170,7 +170,7 @@ app.post('/scenes', (req, res) => {
 app.put('/scenes/:id', (req, res) => {
     var [urls, conditions, error_flag, error_log] = get_Body_Params(req.body);
     if (error_flag) return res.status(400).json(error_log);
-    if (!urls && !conditions) return res.status(400).json('Request is empty');
+    if (!urls && !conditions) return res.set('Warning', 'Request is empty').json();
 
     var id = req.params.id;
     var scene = read_Scene(id);
