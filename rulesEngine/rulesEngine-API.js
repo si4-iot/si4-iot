@@ -15,13 +15,26 @@ const DEFAULT_ID_SIZE = 8;
 // Database start
 const scenes = require('./scenes.json');
 
+// Conditions forms
+const cond_forms = [
+    'conditions', 'condition',
+    'rules', 'rule',
+    'condicoes', 'condicao',
+    'regras', 'regra'
+]
+
+// URLs forms
+const urls_forms = [
+    'urls', 'url',
+]
+
 //---------- Auxiliar functions ---------- //
 
 // Update database
 function save_Scenes() {
     var jsonContent = JSON.stringify(scenes);
 
-    fs.writeFile("./scenes.json", jsonContent, 'utf8', function (err) {
+    fs.writeFile("../rulesEngine/scenes.json", jsonContent, 'utf8', function (err) {
         if (err) {
             console.log("Error: data not saved.");
             return console.log(err);
@@ -40,7 +53,7 @@ function read_All_Scenes() {
 }
 
 // Random scene ID genarator
-function new_Scene() {
+function new_Random_Id() {
     return crypto.randomBytes(DEFAULT_ID_SIZE / 2).toString('hex');
 }
 
@@ -54,11 +67,51 @@ function add_Scene(id, urls, conditions) {
     save_Scenes();
 }
 
+// Update given scene's urls
+function update_Scene_Urls(id, urls) {
+    scenes[id].urls = urls
+
+    save_Scenes();
+}
+
+// Update given scene's conditions
+function update_Scene_Cond(id, conditions) {
+    scenes[id].conditions = conditions
+
+    save_Scenes();
+}
+
 // Delete given scene from the database
 function delete_Scene(id) {
     delete scenes[id];
 
     save_Scenes();
+}
+
+// Read relevant parameters from body
+// Return format: [urls, conditions, error_flag, error_log]
+function get_Body_Params(body) {
+    var urls = undefined;
+    var conditions = undefined;
+
+    for (const k of Object.keys(body)) {
+        if (cond_forms.includes(k)) {
+            if(!conditions) {
+                conditions = body[k];
+            } else {
+                return [urls, conditions, true, 'Multiple conditions fields defined.'];
+            }
+        }
+        if (urls_forms.includes(k)) {
+            if(!urls) {
+                urls = body[k];
+            } else {
+                return [urls, conditions, true, 'Multiple urls fields defined.'];
+            }
+        }
+    }
+
+    return [urls, conditions, false, ''];
 }
 
 //---------- API config ---------- //
@@ -77,7 +130,22 @@ app.get('/scenes', function (req, res) {
 // Return selected scene's image
 app.get('/scenes/:id', function (req, res) {
     var id = req.params.id;
+    var error_flag = false;
+    var error_log = '';
+
     var scene = read_Scene(id);
+
+    // Error handling
+    if(!scene) return res.status(204).json();
+    if(!scene.urls) {
+        error_flag = true;
+        error_log += 'URLs missing. ';
+    }
+    if(!scene.conditions) {
+        error_flag = true;
+        error_log += 'Conditions missing. ';
+    }
+    if(error_flag) return res.status(500).json(error_log + 'Please set all missing information with a PUT request.');
 
     selectThings(scene.urls, scene.conditions).then(selectedTDs => {
         res.json(selectedTDs); // returning selected things
@@ -88,34 +156,42 @@ app.get('/scenes/:id', function (req, res) {
 
 // Request a new scene
 app.post('/scenes', (req, res) => {
-    var urls = req.body.urls;
-    var conditions = req.body.conditions;
+    var [urls, conditions, error_flag, error_log] = get_Body_Params(req.body);
+    if (error_flag) return res.status(400).json(error_log);
 
-    console.log('POST message received.');
-    console.log('urls:\n', urls);
-    console.log('conditions:\n', conditions);
-
-    var id = new_Scene();
+    var id = new_Random_Id();
 
     add_Scene(id, urls, conditions);
 
-    res.json(id);
+    res.status(201).json(id);
 });
 
 // Update a scene
 app.put('/scenes/:id', (req, res) => {
-    var id = req.params.id;
-    var urls = req.body.urls;
-    var conditions = req.body.conditions;
+    var [urls, conditions, error_flag, error_log] = get_Body_Params(req.body);
+    if (error_flag) return res.status(400).json(error_log);
+    if (!urls && !conditions) return res.set('Warning', 'Request is empty').json();
 
-    add_Scene(id, urls, conditions);
+    var id = req.params.id;
+    var scene = read_Scene(id);
+    if(!scene) return res.status(204).json();
+
+    if(urls) update_Scene_Urls(id, urls);
+    if(conditions) update_Scene_Cond(id, conditions);
+
+    res.end();
 });
 
 // Delete a scene
 app.delete('/scenes/:id', (req, res) => {
     var id = req.params.id;
 
+    var scene = read_Scene(id);
+    if(!scene) return res.status(204).json();
+
     delete_Scene(id);
+
+    res.end();
 });
 
 
