@@ -164,18 +164,18 @@ app.listen(DEFAULT_PORT, () => {
 
 //configurando o mongodb
 const MongoClient = require('mongodb').MongoClient;
-const assert = require('assert');
+//const assert = require('assert');
 // URL de conexão
 const url = 'mongodb://localhost:27017';
 // Nome do banco de dados
 const dbName = 'si4-iot';
+// Nome da Coleção
+const dbCollection = 'TD';
 // Create a new MongoClient
 const client = new MongoClient(url);
-
 //configurando a conexão http
 const XMLHttpRequest = require('xmlhttprequest').XMLHttpRequest;
 const xhr = new XMLHttpRequest();
-var response = "teste";
 
 //---------- Funcoes auxiliares ----------------
 function processRequest(e) {
@@ -188,40 +188,58 @@ function processRequest(e) {
 
 function connect_db(response) {
     
-    client.connect(function(err) {
-        assert.equal(null, err);
-        console.log("Connected successfully to server");
-      
-        const db = client.db(dbName);
-
-        db.collection('TD').insertOne(response, function(err, r) {
-            assert.equal(null, err);
-            assert.equal(1, r.insertedCount);
-
+    MongoClient.connect(url, function(err, db) {
+        if (err) throw err;
+        var dbo = db.db(dbName);
+        dbo.collection(dbCollection).insertOne(response, function(err, res) {
+          if (err) throw err;
+          console.log("documento inserido");
+          db.close();
         });
-      
-        client.close();
+      });
+
+}
+
+function filter_db(string_busca) {
+
+    MongoClient.connect(url, function(err, db) {
+        if (err) throw err;
+        var dbo = db.db(dbName);
+        console.info(JSON.stringify(string_busca) + ' agora funcionou');
+        dbo.collection(dbCollection).find(string_busca, { projection: { _id: 0 }}).toArray(function(err, result) {
+            
+            if (err) throw err;
+            let data = JSON.stringify(result, null, 2);
+            fs.writeFileSync('TDs.json', data);
+            console.log('Arquivo Salvo');
+
+            db.close();
+        });
     });
 
 }
 
+//--------------------- API Config ---------------------------------
+
 // Retorna uma lista de url_devices que atendem aos critérios da string de busca
-app.get('/thingdescription', function (req, res) {
-    var string_busca = req.body.string_busca;
+app.post('/thingdescription/:filtro', (req, res) => {
+    string_busca = req.body.string_busca;
+    console.info(string_busca);
+
+    filter_db(string_busca);
+
+    res.status(200).send('conectado com sucesso');
 });
 
 // Recebe a URL, faz a requisição do TD e o persiste em um banco de dados
 app.post('/thingdescription', (req, res) => {
     url_device = req.body.url_device;
 
-    console.log(url_device);
-
     xhr.open('GET', url_device, true);
     xhr.send();
 
     xhr.onreadystatechange = processRequest;
+    res.status(200).send('conectado com sucesso');
 
-    res.sendStatus(200);//preciso mexer melhor nas respostas, ele só está dizendo que deu certo o tempo todo
-    // ainda falta colocar alguma forma dele nã repetir TDs no banco
 });
 

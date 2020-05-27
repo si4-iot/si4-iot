@@ -12,8 +12,18 @@ const TEST = "localhost"
 // const TEST = '192.168.0.108' // Lucas, pode colocar seu ip aqui para fazer os testes
 
 // array of disired things urls
-var urls = ["http://"+TEST_1+":8080/counter", "http://"+TEST_1+":8080/sensor"];
-var url_device = "http://ec2-3-18-220-42.us-east-2.compute.amazonaws.com:8080/device_114a2276";
+var urls = ["http://"+TEST+":8080/counter", "http://"+TEST+":8080/sensor"];
+const url_device1 = "http://ec2-3-18-220-42.us-east-2.compute.amazonaws.com:8080/device_101a4202";
+const url_device2 = "http://ec2-3-18-220-42.us-east-2.compute.amazonaws.com:8080/device_102a3096";
+const url_device3 = "http://ec2-3-18-220-42.us-east-2.compute.amazonaws.com:8080/device_102a1759";
+const url_device4 = "http://ec2-3-18-220-42.us-east-2.compute.amazonaws.com:8080/device_103a1599";
+const url_device5 = "http://ec2-3-18-220-42.us-east-2.compute.amazonaws.com:8080/device_103a3343";
+const url_device6 = "http://ec2-3-18-220-42.us-east-2.compute.amazonaws.com:8080/device_104a9248";
+const url_device7 = "http://ec2-3-18-220-42.us-east-2.compute.amazonaws.com:8080/device_106a8455";
+const url_device8 = "http://ec2-3-18-220-42.us-east-2.compute.amazonaws.com:8080/device_112a8832";
+const url_device9 = "http://ec2-3-18-220-42.us-east-2.compute.amazonaws.com:8080/device_113a6082";
+const url_device10 = "http://ec2-3-18-220-42.us-east-2.compute.amazonaws.com:8080/device_114a2276";
+
 // filtering conditions (in json-rules-engines format)
 var conditions = {
     any: [{
@@ -35,6 +45,27 @@ var conditions = {
         operator: 'greaterThan',
         value: 0
     }]
+}
+
+// Eu comecei a perceber que objetos imediatos funciona, objetos dentro de outros objetos não funciona
+//por exemplo: o campo 'title' é um campo imediato, não há hierarquia
+//mas por outro lado, o campo 'unit of measurement' não funciona por estar dentro de um hierarquia
+//quando o objeto é uma hierarquia fechada como o campo 'securityDefinition' ele funciona
+var string_busca = {
+    //"title": "device_101a4202" // isso funciona
+    //"unit of measurement": "geo:Point" // isso não funciona
+    //"saref": "https://w3id.org/saref" // isso não funciona
+    //"@type": "Thing" // isso funciona
+    /*"security": [
+        "nosec_sc"
+    ] */// isso funciona
+    //"observable": false //  isso não funciona
+    //"id": "urn:uuid:4d7a8da9-2f4b-4fc1-bac5-f9a59a29b17a" // isso funciona
+    /*"securityDefinitions": {
+        "nosec_sc": {
+          "scheme": "nosec"
+        }
+    }*/ // isso funciona
 }
 
 xhr.onreadystatechange = () => {
@@ -62,13 +93,21 @@ xhr.send(JSON.stringify({
 
 }));*/
 
-xhr.open("POST", "http://"+ADRESS+":3000/thingdescription",true); // teste do POST para envio da url do TD
-xhr.setRequestHeader('Content-Type', 'application/json');
-xhr.send(JSON.stringify({
-    url_device: url_device
-}));
-
 // GET
 // xhr.open("GET", "http://"+ADRESS+":3000/scenes", true);
 // xhr.setRequestHeader('Content-Type', 'application/json');
 // xhr.send();
+
+// Teste de envio da url a ser armazenada no banco de dados
+/*xhr.open("POST", "http://"+ADRESS+":3000/thingdescription",true); 
+xhr.setRequestHeader('Content-Type', 'application/json');
+xhr.send(JSON.stringify({
+    url_device: url_device10
+}));*/
+
+//Teste de string de busca como filtro de busca no banco
+xhr.open("POST", "http://"+ADRESS+":3000/thingdescription/:filtro",true);
+xhr.setRequestHeader('Content-Type', 'application/json');
+xhr.send(JSON.stringify({
+    string_busca: string_busca
+}));
