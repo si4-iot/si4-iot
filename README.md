@@ -1,5 +1,5 @@
 
-##To provide infrastructure for virtual devices from Virtual Thing Generator
+## To provide infrastructure for virtual devices from Virtual Thing Generator
 
 
 Using EC2 AWS Ubuntu 18.04 LTS (t2.micro)
