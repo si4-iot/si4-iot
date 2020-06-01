@@ -24,44 +24,22 @@ const url_device8 = "http://ec2-3-18-220-42.us-east-2.compute.amazonaws.com:8080
 const url_device9 = "http://ec2-3-18-220-42.us-east-2.compute.amazonaws.com:8080/device_113a6082";
 const url_device10 = "http://ec2-3-18-220-42.us-east-2.compute.amazonaws.com:8080/device_114a2276";
 
-// filtering conditions (in json-rules-engines format)
-var conditions = {
-    any: [{
-        all: [{
-            fact: 'properties',
-            path: '$.temperature.value',
-            operator: 'greaterThanInclusive',
-            value: 0
-        }, {
-            fact: 'properties',
-            path: '$.temperature.value',
-            operator: 'lessThan',
-            value: 100
-        }]
-    },
-    {
-        fact: 'properties',
-        path: '$.count.value',
-        operator: 'greaterThan',
-        value: 0
-    }]
-}
-
-// Eu comecei a perceber que objetos imediatos funciona, objetos dentro de outros objetos não funciona
-// Por exemplo: o campo 'title' é um campo imediato, não há hierarquia
-//mas por outro lado, o campo 'unit of measurement' não funciona por estar dentro de um hierarquia
-// Quando o objeto é uma hierarquia fechada como o campo 'securityDefinition' ele funciona
-// Para fazer funcionar por exemplo o campo 'unit of measurement', é preciso dar o caminho
-//dentro do documento, assim ficando properties >> gps>> unit of measurement: 'geo:Point'
-//dessa forma se escreve o objeto assim, properties.gps.unit of measurement: 'geo:Point'
+//Exemplos de strings de busca no banco de dados mongodb, para mais informações ou métodos mais refinados de busca
+//acesse https://docs.mongodb.com/manual/tutorial/query-documents/
 var string_busca = {
-    //"title": "device_101a4202" // isso funciona
-    //"properties.gps.unit of measurement": "geo:Point" // elemento único de um documento
+    //exemplo de busca simples, por uma caracteristica nos documentos
+    "properties.gps.unit of measurement": "geo:Point" // elemento único de um documento
     //"properties.humidity.unit of measurement": "m3-lite:Humidity" // elemento único de um documento
-    $or:[
+
+    //exemplo de busca composta simples, bucas duas caracteristicas independentes nos documentos
+   /* $or:[
     {"properties.gps.unit of measurement": "geo:Point"},
     {"properties.humidity.unit of measurement": "m3-lite:Humidity"}
-    ]
+    ]*/
+
+    //exemplo de buca simples, por mais de uma caracteristica em um mesmo documento
+    /*"properties.gps.unit of measurement": "geo:Point",
+    "properties.falldetector.unit of measurement": "saref:OnOffState"*/
 }
 
 xhr.onreadystatechange = () => {
@@ -78,22 +56,6 @@ xhr.onreadystatechange = () => {
     }
 }
 
-// xhr.open("POST", "http://172.31.47.144:3000/scenes", true);
-/*xhr.open("POST", "http://"+ADRESS+":3000/scenes", true);
-// POST
-xhr.open("POST", "http://"+ADRESS+":3000/scenes", true);
-xhr.setRequestHeader('Content-Type', 'application/json');
-xhr.send(JSON.stringify({
-    urls: urls,
-    conditions: conditions
-
-}));*/
-
-// GET
-// xhr.open("GET", "http://"+ADRESS+":3000/scenes", true);
-// xhr.setRequestHeader('Content-Type', 'application/json');
-// xhr.send();
-
 // Teste de envio da url a ser armazenada no banco de dados
 /*xhr.open("POST", "http://"+ADRESS+":3000/thingdescription",true); 
 xhr.setRequestHeader('Content-Type', 'application/json');
@@ -101,7 +63,7 @@ xhr.send(JSON.stringify({
     url_device: url_device10
 }));*/
 
-//Teste de string de busca como filtro de busca no banco
+//Teste de string de busca como filtro de busca no banco usando POST
 xhr.open("POST", "http://"+ADRESS+":3000/thingdescription/:filtro",true);
 xhr.setRequestHeader('Content-Type', 'application/json');
 xhr.send(JSON.stringify({

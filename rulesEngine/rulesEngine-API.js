@@ -251,13 +251,21 @@ function filter_db(string_busca) {
         dbo.collection(dbCollection).find(string_busca, { projection: { _id: 0 }}).toArray(function(err, result) {
             
             if (err) throw err;
-            let data = JSON.stringify(result, null, 2);
-            fs.writeFileSync('TDs.json', data);
-            console.log('Arquivo Salvo');
+            // let data = JSON.stringify(result, null, 2);
+            // fs.writeFileSync('TDs.json', data);
+            // console.log('Arquivo Salvo');
 
             db.close();
+
+            return result;
         });
+
+        let data = JSON.stringify(result, null, 2);
+            fs.writeFileSync('TDs.json', data);
+            console.log('Arquivo Salvo');
+        
     });
+
 
 }
 
