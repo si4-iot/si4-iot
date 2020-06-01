@@ -2,7 +2,7 @@ const XMLHttpRequest = require('xmlhttprequest').XMLHttpRequest;
 const xhr = new XMLHttpRequest();
 
 // Destination IP
-const ADRESS = '192.168.0.108';
+const ADRESS = '10.0.0.105';
 // const ADRESS = '18.216.2.4';
 //const ADRESS = "localhost"
 
@@ -28,11 +28,11 @@ const url_device10 = "http://ec2-3-18-220-42.us-east-2.compute.amazonaws.com:808
 //acesse https://docs.mongodb.com/manual/tutorial/query-documents/
 var string_busca = {
     //exemplo de busca simples, por uma caracteristica nos documentos
-    "properties.gps.unit of measurement": "geo:Point" // elemento único de um documento
-    //"properties.humidity.unit of measurement": "m3-lite:Humidity" // elemento único de um documento
+    //"properties.gps.unit of measurement": "geo:Point" // elemento único de um documento
+    "properties.humidity.unit of measurement": "m3-lite:Humidity" // elemento único de um documento
 
     //exemplo de busca composta simples, bucas duas caracteristicas independentes nos documentos
-   /* $or:[
+    /*$or:[
     {"properties.gps.unit of measurement": "geo:Point"},
     {"properties.humidity.unit of measurement": "m3-lite:Humidity"}
     ]*/
@@ -46,12 +46,12 @@ xhr.onreadystatechange = () => {
     if (xhr.readyState == 4) {
         console.log('status: ', xhr.status);
         if (xhr.status == 200) {
-            console.log('Got response:\n');
+            console.log('Resposta recebida:\n');
             console.log(xhr.responseText);
         }
         else {
-            console.log('Error: status not ok');
-            console.log('or timeout event ocured...');
+            console.log('Erro: status nao esta tudo bem');
+            console.log('ou esgotou o tempo do evento...');
         }
     }
 }

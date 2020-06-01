@@ -242,43 +242,38 @@ function connect_db(response) {
 
 }
 
-function filter_db(string_busca) {
-
-    MongoClient.connect(url, function(err, db) {
-        if (err) throw err;
-        var dbo = db.db(dbName);
-        console.info(JSON.stringify(string_busca) + ' agora funcionou');
-        dbo.collection(dbCollection).find(string_busca, { projection: { _id: 0 }}).toArray(function(err, result) {
-            
-            if (err) throw err;
-            // let data = JSON.stringify(result, null, 2);
-            // fs.writeFileSync('TDs.json', data);
-            // console.log('Arquivo Salvo');
-
-            db.close();
-
-            return result;
-        });
-
-        let data = JSON.stringify(result, null, 2);
-            fs.writeFileSync('TDs.json', data);
-            console.log('Arquivo Salvo');
-        
-    });
-
-
-}
-
 //--------------------- API Config ---------------------------------
 
 // Retorna uma lista de url_devices que atendem aos critérios da string de busca
 app.post('/thingdescription/:filtro', (req, res) => {
     string_busca = req.body.string_busca;
-    console.info(string_busca);
+    //console.info(string_busca);
 
-    filter_db(string_busca);
+    MongoClient.connect(url, function(err, db) {
+        if (err){
+            res.status(500).send('houve um erro na comunicacao com o mongodb');
+            throw err;
+        }
 
-    res.status(200).send('conectado com sucesso');
+        var dbo = db.db(dbName);
+        //console.info(JSON.stringify(string_busca) + ' string de busca');
+        dbo.collection(dbCollection).find(string_busca, { projection: { _id: 0 } }).toArray(function (err, result) {
+            if (err){
+                res.status(500).send('nao foi possivel fazer a busca no banco de dados');
+                throw err;
+            }
+
+            let data = JSON.stringify(result, null, 2); // retorna um JSON identado e facil de ler
+            //let data = JSON.stringify(result); // retorna um JSON em forma de string e dificil de ler
+            //fs.writeFileSync('TDs.json', data);
+            //console.log('Arquivo Salvo');
+            db.close();
+            res.status(200).send(data);
+
+        });
+
+    });
+    
 });
 
 // Recebe a URL, faz a requisição do TD e o persiste em um banco de dados
