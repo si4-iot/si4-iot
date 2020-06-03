@@ -220,10 +220,12 @@ const XMLHttpRequest = require('xmlhttprequest').XMLHttpRequest;
 const xhr = new XMLHttpRequest();
 
 //---------- Funcoes auxiliares ----------------
-function processRequest(e) {
+function processRequest() {
     if (xhr.readyState == 4 && xhr.status == 200) 
     {
+        console.info("teste");
         response = JSON.parse(xhr.responseText);
+        //response["url_device"] = url_device;
         connect_db(response);
     }
 }
@@ -283,7 +285,18 @@ app.post('/thingdescription', (req, res) => {
     xhr.open('GET', url_device, true);
     xhr.send();
 
-    xhr.onreadystatechange = processRequest;
+    xhr.onreadystatechange = function () {
+        
+        if (xhr.readyState == 4 && xhr.status == 200) 
+    {
+        console.info("teste");
+        response = JSON.parse(xhr.responseText);
+        response["url_device"] = url_device;
+
+        connect_db(response);
+    }
+
+    };
     res.status(200).send('conectado com sucesso');
 
 });
