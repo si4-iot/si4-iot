@@ -220,7 +220,7 @@ const XMLHttpRequest = require('xmlhttprequest').XMLHttpRequest;
 const xhr = new XMLHttpRequest();
 
 //---------- Funcoes auxiliares ----------------
-function processRequest() {
+function processRequest() { //descontinuado ou aguardando auterações
     if (xhr.readyState == 4 && xhr.status == 200) 
     {
         console.info("teste");
@@ -259,7 +259,7 @@ app.post('/thingdescription/:filtro', (req, res) => {
 
         var dbo = db.db(dbName);
         //console.info(JSON.stringify(string_busca) + ' string de busca');
-        dbo.collection(dbCollection).find(string_busca, { projection: { _id: 0 } }).toArray(function (err, result) {
+        dbo.collection(dbCollection).find(string_busca, { projection: { _id: 0, url_device:1 } }).toArray(function (err, result) {
             if (err){
                 res.status(500).send('nao foi possivel fazer a busca no banco de dados');
                 throw err;
@@ -289,7 +289,6 @@ app.post('/thingdescription', (req, res) => {
         
         if (xhr.readyState == 4 && xhr.status == 200) 
     {
-        console.info("teste");
         response = JSON.parse(xhr.responseText);
         response["url_device"] = url_device;
 

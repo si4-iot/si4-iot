@@ -57,15 +57,15 @@ xhr.onreadystatechange = () => {
 }
 
 // Teste de envio da url a ser armazenada no banco de dados
-xhr.open("POST", "http://"+ADRESS+":3000/thingdescription",true); 
+/*xhr.open("POST", "http://"+ADRESS+":3000/thingdescription",true); 
 xhr.setRequestHeader('Content-Type', 'application/json');
 xhr.send(JSON.stringify({
-    url_device: url_device1
-}));
+    url_device: url_device10
+}));*/
 
 //Teste de string de busca como filtro de busca no banco usando POST
-/*xhr.open("POST", "http://"+ADRESS+":3000/thingdescription/:filtro",true);
+xhr.open("POST", "http://"+ADRESS+":3000/thingdescription/:filtro",true);
 xhr.setRequestHeader('Content-Type', 'application/json');
 xhr.send(JSON.stringify({
     string_busca: string_busca
-}));*/
+}));
