@@ -24,6 +24,19 @@ const url_device8 = "http://ec2-3-18-220-42.us-east-2.compute.amazonaws.com:8080
 const url_device9 = "http://ec2-3-18-220-42.us-east-2.compute.amazonaws.com:8080/device_113a6082";
 const url_device10 = "http://ec2-3-18-220-42.us-east-2.compute.amazonaws.com:8080/device_114a2276";
 
+const url_list = [
+    "http://ec2-3-18-220-42.us-east-2.compute.amazonaws.com:8080/device_114a3607",
+    "http://ec2-3-18-220-42.us-east-2.compute.amazonaws.com:8080/device_117a2520",
+    "http://ec2-3-18-220-42.us-east-2.compute.amazonaws.com:8080/device_118a8731",
+    "http://ec2-3-18-220-42.us-east-2.compute.amazonaws.com:8080/device_117a6318",
+    "http://ec2-3-18-220-42.us-east-2.compute.amazonaws.com:8080/device_11a9601",
+    "http://ec2-3-18-220-42.us-east-2.compute.amazonaws.com:8080/device_121a1965",
+    "http://ec2-3-18-220-42.us-east-2.compute.amazonaws.com:8080/device_120a8077",
+    "http://ec2-3-18-220-42.us-east-2.compute.amazonaws.com:8080/device_120a6804",
+    "http://ec2-3-18-220-42.us-east-2.compute.amazonaws.com:8080/device_122a1958",
+    "http://ec2-3-18-220-42.us-east-2.compute.amazonaws.com:8080/device_107a8854"
+];
+
 //Exemplos de strings de busca no banco de dados mongodb, para mais informações ou métodos mais refinados de busca
 //acesse https://docs.mongodb.com/manual/tutorial/query-documents/
 var string_busca = {
@@ -60,12 +73,25 @@ xhr.onreadystatechange = () => {
 /*xhr.open("POST", "http://"+ADRESS+":3000/thingdescription",true); 
 xhr.setRequestHeader('Content-Type', 'application/json');
 xhr.send(JSON.stringify({
-    url_device: url_device10
+    url_device: url_device1
+}));*/
+
+// Teste de envio de lista de urls a ser armazenada no banco de dados
+/*xhr.open("POST", "http://"+ADRESS+":3000/thingdescription/:lista",true); 
+xhr.setRequestHeader('Content-Type', 'application/json');
+xhr.send(JSON.stringify({
+    url_list: url_list
 }));*/
 
 //Teste de string de busca como filtro de busca no banco usando POST
-xhr.open("POST", "http://"+ADRESS+":3000/thingdescription/:filtro",true);
-xhr.setRequestHeader('Content-Type', 'application/json');
-xhr.send(JSON.stringify({
+xhr.open("GET", "http://"+ADRESS+":3000/thingdescription/:filtro",true);
+xhr.setRequestHeader('Content-Type', JSON.stringify({//gambiarra das brabas
     string_busca: string_busca
 }));
+xhr.send();
+
+// por favor não usar esse trecho do código
+/*xhr.setRequestHeader('Content-Type','application/json'); // nao esta funcionando. não sei o porque.
+xhr.send(JSON.stringify({
+    string_busca: string_busca
+}));*/

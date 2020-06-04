@@ -206,28 +206,32 @@ app.listen(DEFAULT_PORT, () => {
 
 //configurando o mongodb
 const MongoClient = require('mongodb').MongoClient;
-//const assert = require('assert');
 // URL de conexão
 const url = 'mongodb://localhost:27017';
 // Nome do banco de dados
 const dbName = 'si4-iot';
 // Nome da Coleção
 const dbCollection = 'TD';
-// Create a new MongoClient
-const client = new MongoClient(url);
 //configurando a conexão http
 const XMLHttpRequest = require('xmlhttprequest').XMLHttpRequest;
-const xhr = new XMLHttpRequest();
+
 
 //---------- Funcoes auxiliares ----------------
-function processRequest() { //descontinuado ou aguardando auterações
-    if (xhr.readyState == 4 && xhr.status == 200) 
-    {
-        console.info("teste");
-        response = JSON.parse(xhr.responseText);
-        //response["url_device"] = url_device;
-        connect_db(response);
-    }
+function gethttp(url_device) { //descontinuado ou aguardando auterações
+
+    const xhr = new XMLHttpRequest();
+    xhr.open('GET', url_device, true);
+    xhr.send();
+    
+    xhr.onreadystatechange = function () {
+        if(xhr.readyState == 4 && xhr.status == 200) 
+        {    
+            response = JSON.parse(xhr.responseText);
+            response["url_device"] = url_device;
+            connect_db(response);
+        }
+    };
+
 }
 
 function connect_db(response) {
@@ -246,11 +250,34 @@ function connect_db(response) {
 
 //--------------------- API Config ---------------------------------
 
-// Retorna uma lista de url_devices que atendem aos critérios da string de busca
-app.post('/thingdescription/:filtro', (req, res) => {
-    string_busca = req.body.string_busca;
-    //console.info(string_busca);
+// Recebe a URL, faz a requisição do TD e o persiste em um banco de dados
+app.post('/thingdescription', (req, res) => {
+    url_device = req.body.url_device;
 
+    gethttp(url_device);
+    res.status(200).send('conectado com sucesso');
+
+});
+
+// Recebe a URL, faz a requisição de uma lista de TDs e os persiste em um banco de dados
+app.post('/thingdescription/:lista', (req, res) => {
+    url_list = req.body.url_list;
+
+    url_list.forEach(function(element) {
+        gethttp(element);
+    });
+        
+
+    res.status(200).send('conectado com sucesso');
+
+});
+
+// Retorna uma lista de url_devices que atendem aos critérios da string de busca
+app.get('/thingdescription/:filtro', (req, res) => {//do jeito que está ele não funciona como GET
+    strAux = JSON.parse(req.header('Content-Type')); //gambiarra boa e de qualidade
+    string_busca = strAux.string_busca;//gambiarra boa e de qualidade
+    //console.log(string_busca);
+    
     MongoClient.connect(url, function(err, db) {
         if (err){
             res.status(500).send('houve um erro na comunicacao com o mongodb');
@@ -258,7 +285,6 @@ app.post('/thingdescription/:filtro', (req, res) => {
         }
 
         var dbo = db.db(dbName);
-        //console.info(JSON.stringify(string_busca) + ' string de busca');
         dbo.collection(dbCollection).find(string_busca, { projection: { _id: 0, url_device:1 } }).toArray(function (err, result) {
             if (err){
                 res.status(500).send('nao foi possivel fazer a busca no banco de dados');
@@ -277,26 +303,3 @@ app.post('/thingdescription/:filtro', (req, res) => {
     });
     
 });
-
-// Recebe a URL, faz a requisição do TD e o persiste em um banco de dados
-app.post('/thingdescription', (req, res) => {
-    url_device = req.body.url_device;
-
-    xhr.open('GET', url_device, true);
-    xhr.send();
-
-    xhr.onreadystatechange = function () {
-        
-        if (xhr.readyState == 4 && xhr.status == 200) 
-    {
-        response = JSON.parse(xhr.responseText);
-        response["url_device"] = url_device;
-
-        connect_db(response);
-    }
-
-    };
-    res.status(200).send('conectado com sucesso');
-
-});
-
