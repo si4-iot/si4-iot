@@ -39,7 +39,7 @@ const Resultset = require('../resultset');
 // }).catch(err => { console.error('Error:', err) });
 // ----------------------------------------------- //
 
-function SelectThings(urls, conditions) {
+function SelectThings(urls, conditions, timeout) {
     return new Promise(async (resolve, reject) => {
         let selectedThings = [];                // array of the urls of the selected things
         let engine = new RuleEngine.Engine();   // creating a engine
@@ -56,9 +56,9 @@ function SelectThings(urls, conditions) {
         });
         engine.addRule(rules);
 
-        Resultset(urls).then(async (imgs) => { // getting things images
+        Resultset(urls, timeout).then(async (imgs) => { // getting things images
             if (imgs == []) {
-                reject('There are no images');
+                reject('No TD found.');
             }
             // Applying rules for every image
             for (img of imgs) {
