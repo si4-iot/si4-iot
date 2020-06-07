@@ -45,7 +45,7 @@ server.on('message', (channel, message) => {
         let scenes = JSON.parse(message);                 // get scenes
         for (const [name, info] of Object.entries(scenes)) {
             // Filtering scene things by the scene conditions
-            selectThings(info.urls, info.conditions).then(selectedTDs => {
+            selectThings(info.urls, info.conditions).then( ([selectedTDs, missingTDs]) => {
                 client.publish(name, JSON.stringify(selectedTDs)); // publish selected things urls to the listeners
             }, cause => {
                 console.log('selectThings rejected:', cause);

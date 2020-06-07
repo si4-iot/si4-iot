@@ -108,22 +108,22 @@ function get_Body_Params(body) {
             if (!conditions) {
                 conditions = body[k];
             } else {
-                return [ [] , true, 'Multiple conditions fields defined.'];
+                return [[], true, 'Multiple conditions fields defined.'];
             }
         }
         if (urls_forms.includes(k)) {
             if (!urls) {
                 urls = body[k];
             } else {
-                return [ [] , true, 'Multiple urls fields defined.'];
+                return [[], true, 'Multiple urls fields defined.'];
             }
         }
     }
     if (timeout != undefined && !Number.isInteger(timeout)) {
-        return [ [] , true, 'Timeout format unexpected.'];
+        return [[], true, 'Timeout format unexpected.'];
     }
 
-    return [ [urls, conditions, timeout] , false, ''];
+    return [[urls, conditions, timeout], false, ''];
 }
 
 //---------- API config ---------- //
@@ -159,8 +159,12 @@ app.get('/scenes/:id', function (req, res) {
     }
     if (error_flag) return res.status(500).json(error_log + 'Please set all missing information with a PUT request.');
 
-    selectThings(scene.urls, scene.conditions, scene.timeout).then(selectedTDs => {
-        res.json(selectedTDs); // returning selected things
+    selectThings(scene.urls, scene.conditions, scene.timeout).then(([selectedTDs, missingTDs]) => {
+        if (missingTDs) {
+            res.set('Warning', "Some TDs could not be found or haven't replied in time").json(selectedTDs); // returning selected things
+        } else {
+            res.json(selectedTDs); // returning selected things
+        }
     }, cause => {
         console.log('selectThings rejected:', cause);
         res.status(500).json('Error: ' + cause);
@@ -192,15 +196,15 @@ app.put('/scenes/:id', (req, res) => {
     var conditions = params[1];
     var timeout = params[2];
     if (error_flag) return res.status(400).json(error_log);
-    if (!urls && !conditions) return res.set('Warning', 'Request is empty').json('Warning: Request is empty');
+    if (!urls && !conditions && !timeout) return res.status(400).json('Request is empty');
 
     var id = req.params.id;
     var scene = read_Scene(id);
     if (!scene) return res.status(204).json();
 
-    if (urls)       update_Scene_Urls(id, urls);
+    if (urls) update_Scene_Urls(id, urls);
     if (conditions) update_Scene_Cond(id, conditions);
-    if (timeout)    update_Scene_Timeout(id, timeout);
+    if (timeout) update_Scene_Timeout(id, timeout);
 
     res.end();
 });

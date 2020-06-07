@@ -2,11 +2,11 @@ const XMLHttpRequest = require('xmlhttprequest').XMLHttpRequest;
 const xhr = new XMLHttpRequest();
 
 // Destination IP
-// const ADRESS = '18.216.2.4';
+// const ADRESS = 'ec2-3-135-214-58.us-east-2.compute.amazonaws.com';
 const ADRESS = "localhost"
 
 // Test machines IPs
-// const TEST = '192.168.15.5'
+// const TEST = '192.168.15.10'
 const TEST = "localhost"
 
 // array of disired things urls
@@ -29,7 +29,7 @@ var conditions = {
     {
         fact: 'properties',
         path: '$.count.value',
-        operator: 'greaterThan',
+        operator: 'greaterThanInclusive',
         value: 0
     }]
 }
@@ -37,13 +37,16 @@ var conditions = {
 xhr.onreadystatechange = () => {
     if (xhr.readyState == 4) {
         console.log('status: ', xhr.status);
-        if (xhr.status == 200) {
-            console.log('Got response:\n');
+        if (xhr.status == 200 || xhr.status == 201) {
+            console.log('Warnings:')
+            console.log(xhr.getResponseHeader('Warning'));
+            console.log('Got response:');
             console.log(xhr.responseText);
         }
         else {
             console.log('Error: status not ok');
             console.log('or timeout event ocured...');
+            console.log(xhr.responseText);
         }
     }
 }
@@ -53,15 +56,25 @@ xhr.onreadystatechange = () => {
 // xhr.setRequestHeader('Content-Type', 'application/json');
 // xhr.send(JSON.stringify({
 //     urls: urls,
-//     conditions: conditions
+//     condicoes: conditions,
 // }));
 
-var id = ""
+// var id = "142a2e1f"
+var id = 'af9e1bbf'
 
 // GET
-xhr.open("GET", "http://"+ADRESS+":3000/scenes/", true);
+xhr.open("GET", "http://"+ADRESS+":3000/scenes/"+id, true);
 xhr.setRequestHeader('Content-Type', 'application/json');
 xhr.send();
+
+// PUT
+// xhr.open("PUT", "http://"+ADRESS+":3000/scenes/"+id, true);
+// xhr.setRequestHeader('Content-Type', 'application/json');
+// xhr.send(JSON.stringify({
+//     // urls: urls,
+//     conditions: conditions,
+//     // timeout: 10000 // 10 seconds
+// }));
 
 // DELETE
 // xhr.open("DELETE", "http://"+ADRESS+":3000/scenes/" + id, true);

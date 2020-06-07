@@ -39,6 +39,11 @@ const Resultset = require('../resultset');
 // }).catch(err => { console.error('Error:', err) });
 // ----------------------------------------------- //
 
+// Return format:
+//  [
+//      selectedThings      : array of selected things
+//      missingTDs : boolean. When TRUE, some TDs could not be found or haven't replied in time
+//  ]
 function SelectThings(urls, conditions, timeout) {
     return new Promise(async (resolve, reject) => {
         let selectedThings = [];                // array of the urls of the selected things
@@ -56,7 +61,7 @@ function SelectThings(urls, conditions, timeout) {
         });
         engine.addRule(rules);
 
-        Resultset(urls, timeout).then(async (imgs) => { // getting things images
+        Resultset(urls, timeout).then(async ([imgs, missingTDs]) => { // getting things images
             if (imgs == []) {
                 reject('No TD found.');
             }
@@ -71,7 +76,7 @@ function SelectThings(urls, conditions, timeout) {
                     }
                 });
             }
-            resolve(selectedThings); // returning selected things urls
+            resolve([selectedThings, missingTDs]); // returning selected things urls
         }, (cause) => { reject('Resultset rejected: ' + cause); })
             .catch((err) => { console.error("Resultset failed:", err); });
     });
