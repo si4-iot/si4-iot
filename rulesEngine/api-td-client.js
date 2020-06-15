@@ -2,8 +2,8 @@ const XMLHttpRequest = require('xmlhttprequest').XMLHttpRequest;
 const xhr = new XMLHttpRequest();
 
 // Destination IP
-const ADRESS = '10.0.0.105';
-// const ADRESS = '18.216.2.4';
+//const ADRESS = '10.0.0.105';
+ const ADRESS = 'ec2-3-135-214-58.us-east-2.compute.amazonaws.com';
 //const ADRESS = "localhost"
 
 // Test machines IPs
@@ -42,7 +42,7 @@ const url_list = [
 var string_busca = {
     //exemplo de busca simples, por uma caracteristica nos documentos
     //"properties.gps.unit of measurement": "geo:Point" // elemento único de um documento
-    "properties.humidity.unit of measurement": "m3-lite:Humidity" // elemento único de um documento
+    //"properties.humidity.unit of measurement": "m3-lite:Humidity" // elemento único de um documento
 
     //exemplo de busca composta simples, bucas duas caracteristicas independentes nos documentos
     /*$or:[
@@ -53,6 +53,11 @@ var string_busca = {
     //exemplo de buca simples, por mais de uma caracteristica em um mesmo documento
     /*"properties.gps.unit of measurement": "geo:Point",
     "properties.falldetector.unit of measurement": "saref:OnOffState"*/
+
+    $or:[{"properties.gps.unit of measurement": "geo:Point",
+    "properties.carbon_dioxide.unit of measurement": "m3-lite:CO2"},
+    {"properties.gps.unit of measurement": "m3-lite:GPSSensor",
+    "properties.carbon_dioxide.unit of measurement": "m3-lite:CO2"}]
 }
 
 xhr.onreadystatechange = () => {
