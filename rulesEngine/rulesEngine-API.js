@@ -167,7 +167,7 @@ app.get('/scenes/:id', function (req, res) {
         }
     }, cause => {
         console.log('selectThings rejected:', cause);
-        res.status(500).json('Error: ' + cause);
+        res.status(500).json(cause);
     }).catch(err => {
         console.error('selectThings failed:', err);
         res.status(500).json('Internal server error');

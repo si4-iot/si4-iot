@@ -61,6 +61,12 @@ function SelectThings(urls, conditions, timeout) {
         });
         engine.addRule(rules);
 
+        // Setting engine's facts
+        // let unityOfMeasurementfact = function(params, almanac) {
+
+        // };
+        // engine.addFact('unityOfMeasurement', ontologyFact);
+
         Resultset(urls, timeout).then(async ([imgs, missingTDs]) => { // getting things images
             if (imgs == []) {
                 reject('No TD found.');
@@ -77,8 +83,11 @@ function SelectThings(urls, conditions, timeout) {
                 });
             }
             resolve([selectedThings, missingTDs]); // returning selected things urls
-        }, (cause) => { reject('Resultset rejected: ' + cause); })
-            .catch((err) => { console.error("Resultset failed:", err); });
+        }, (cause) => { reject(cause); })
+            .catch((err) => {
+                console.error(err);
+                reject(err);
+            });
     });
 }
 
