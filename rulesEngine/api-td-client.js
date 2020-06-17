@@ -43,6 +43,7 @@ var string_busca = {
     //exemplo de busca simples, por uma caracteristica nos documentos
     //"properties.gps.unit of measurement": "geo:Point" // elemento único de um documento
     //"properties.humidity.unit of measurement": "m3-lite:Humidity" // elemento único de um documento
+    //"properties.gps.type":"geo:Point"
 
     //exemplo de busca composta simples, bucas duas caracteristicas independentes nos documentos
     /*$or:[
@@ -54,10 +55,8 @@ var string_busca = {
     /*"properties.gps.unit of measurement": "geo:Point",
     "properties.falldetector.unit of measurement": "saref:OnOffState"*/
 
-    $or:[{"properties.gps.unit of measurement": "geo:Point",
-    "properties.carbon_dioxide.unit of measurement": "m3-lite:CO2"},
-    {"properties.gps.unit of measurement": "m3-lite:GPSSensor",
-    "properties.carbon_dioxide.unit of measurement": "m3-lite:CO2"}]
+    "properties.gps.type": "m3-lite:GPSSensor",
+    "properties.carbon_dioxide.unit of measurement": "m3-lite:CO2"
 }
 
 xhr.onreadystatechange = () => {
