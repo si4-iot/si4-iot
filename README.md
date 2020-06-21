@@ -42,3 +42,31 @@ Executing virtual device
 ```
 $ node packages/cli/dist/cli.js examples/scripts/deviceX.js
 ```
+
+Script Executing nodes. Creating file activevirtualthing.sh.
+
+```
+$nano ~/activevirtualthing.sh
+```
+
+Input these commands into activevirtualthing.sh
+
+```
+#!/bin/bash
+cd ~/thingweb.node-wot/
+node packages/cli/dist/cli.js ~/*.js
+```
+
+Executing the command:
+
+```
+$ sudo chmod +x ~/activevirtualthing.sh
+```
+$ crontab -e
+```
+
+And then
+
+```
+@reboot ~/activevirtualthing.sh
+```
