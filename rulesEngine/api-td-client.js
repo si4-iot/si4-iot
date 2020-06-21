@@ -37,6 +37,7 @@ const url_list = [
     "http://ec2-3-18-220-42.us-east-2.compute.amazonaws.com:8080/device_107a8854"
 ];
 
+
 //Exemplos de strings de busca no banco de dados mongodb, para mais informações ou métodos mais refinados de busca
 //acesse https://docs.mongodb.com/manual/tutorial/query-documents/
 var string_busca = {
@@ -55,8 +56,8 @@ var string_busca = {
     /*"properties.gps.unit of measurement": "geo:Point",
     "properties.falldetector.unit of measurement": "saref:OnOffState"*/
 
-    "properties.gps.type": "m3-lite:GPSSensor",
-    "properties.carbon_dioxide.unit of measurement": "m3-lite:CO2"
+    "properties.gps":{$exists:true}, // o query {$exists:true} permite buscar pela existencia de campos nos ducumentos
+    "properties.carbon_dioxide": {$exists:true} // assim é possivel fazer uma busca generia por propriedades sem especificar o tipo de sensor ou atuador
 }
 
 xhr.onreadystatechange = () => {
