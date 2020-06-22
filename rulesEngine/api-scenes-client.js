@@ -2,33 +2,43 @@ const XMLHttpRequest = require('xmlhttprequest').XMLHttpRequest;
 const xhr = new XMLHttpRequest();
 
 // Destination Adress
-// const ADRESS = 'ec2-3-135-214-58.us-east-2.compute.amazonaws.com';
-const ADRESS = "localhost"
+const ADRESS = 'ec2-3-135-214-58.us-east-2.compute.amazonaws.com';
+// const ADRESS = "localhost"
 
 // Test machines Adress
 // const TEST = 'http://192.168.15.17'
-const TEST = "http://localhost"
+// const TEST = "http://localhost"
 
 // array of disired things urls
-var urls = [TEST+":8080/counter", TEST+":8080/sensor"];
-// var urls = require('./urls.json'); // Recuperando urls filtradas no api-td-client.js
+// var urls = [TEST+":8080/counter", TEST+":8080/sensor"];
+var urls = require('./urls.json'); // Recuperando urls filtradas no api-td-client.js
 
 // filtering conditions (in json-rules-engines format)
 var conditions = {
     all: [{
-        fact: 'properties.gps',
-        path: '$.gps.value',
+        fact: 'properties',
+        path: '$.gps.value[0]',
         operator: 'greaterThanInclusive',
-        value: 0
+        value: -40
     }, {
         fact: 'properties',
-        path: '$.gps.value',
+        path: '$.gps.value[0]',
         operator: 'lessThanInclusive',
-        value: 200
+        value: -18
+    }, {
+        fact: 'properties',
+        path: '$.gps.value[1]',
+        operator: 'greaterThanInclusive',
+        value: -40
+    }, {
+        fact: 'properties',
+        path: '$.gps.value[1]',
+        operator: 'lessThanInclusive',
+        value: -18
     }, {
         fact: 'properties',
         path: '$.carbon_dioxide.value',
-        operator: 'greaterThan',
+        operator: 'greaterThanInclusive',
         value: 0
     }]
 }
@@ -81,8 +91,8 @@ xhr.onreadystatechange = () => {
 //     timeout: 30000 // 30 seconds
 // }));
 
-var id = "8e6e09ca";
-// var id = '75238e08';
+// var id = "8e6e09ca";
+var id = '75238e08';
 
 // GET
 xhr.open("GET", "http://" + ADRESS + ":3000/scenes/" + id, true);
@@ -91,6 +101,11 @@ xhr.send();
 
 // GET ALL
 // xhr.open("GET", "http://" + ADRESS + ":3000/scenes/", true);
+// xhr.setRequestHeader('Content-Type', 'application/json');
+// xhr.send();
+
+// GET images
+// xhr.open("GET", "http://" + ADRESS + ":3000/scenes/images/" + id, true);
 // xhr.setRequestHeader('Content-Type', 'application/json');
 // xhr.send();
 
