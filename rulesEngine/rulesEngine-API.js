@@ -7,6 +7,7 @@ const bodyParser = require('body-parser');
 const fs = require('fs');
 const crypto = require('crypto');
 const selectThings = require('./rulesEngine');
+const Resultset = require('../resultset');
 
 // Default configurations
 const DEFAULT_PORT = 3000;
@@ -175,7 +176,7 @@ app.get('/scenes/:id', function (req, res) {
 });
 
 // Return selected scene's urls images
-app.get('/scenes/tds/:id', function (req, res) {
+app.get('/scenes/images/:id', function (req, res) {
     var id = req.params.id;
     var error_flag = false;
     var error_log = '';
