@@ -7,6 +7,7 @@ const bodyParser = require('body-parser');
 const fs = require('fs');
 const crypto = require('crypto');
 const selectThings = require('./rulesEngine');
+const Resultset = require('../resultset');
 
 // Default configurations
 const DEFAULT_PORT = 3000;
@@ -139,7 +140,7 @@ app.get('/scenes', function (req, res) {
     res.json(data);
 });
 
-// Return selected scene's image
+// Return selected scene's filtered urls
 app.get('/scenes/:id', function (req, res) {
     var id = req.params.id;
     var error_flag = false;
@@ -172,6 +173,36 @@ app.get('/scenes/:id', function (req, res) {
         console.error('selectThings failed:', err);
         res.status(500).json('Internal server error');
     });
+});
+
+// Return selected scene's urls images
+app.get('/scenes/images/:id', function (req, res) {
+    var id = req.params.id;
+    var error_flag = false;
+    var error_log = '';
+
+    var scene = read_Scene(id);
+
+    // Error handling
+    if (!scene) return res.status(204).json();
+    if (!scene.urls) {
+        error_flag = true;
+        error_log += 'URLs missing. ';
+    }
+    if (error_flag) return res.status(500).json(error_log + 'Please set all missing information with a PUT request.');
+
+    // Getting TDs images
+    Resultset(scene.urls, scene.timeout).then( ([imgs, missingTDs]) => {
+        if (missingTDs) {
+            res.set('Warning', "Some TDs could not be found or haven't replied in time").json(imgs); // returning images
+        } else {
+            res.json(imgs); // returning images
+        }
+    }, (cause) => { res.status(500).json(cause); })
+        .catch((err) => {
+            console.error(err);
+            res.status(500).json(err);
+        });
 });
 
 // Request a new scene
