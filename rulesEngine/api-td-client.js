@@ -49,8 +49,26 @@ var string_busca = {
     /*"properties.gps.unit of measurement": "geo:Point",
     "properties.falldetector.unit of measurement": "saref:OnOffState"*/
 
-    /*"properties.gps":{$exists:true}, // o query {$exists:true} permite buscar pela existencia de campos nos ducumentos
-    "properties.carbon_dioxide": {$exists:true} */// assim é possivel fazer uma busca generia por propriedades sem especificar o tipo de sensor ou atuador
+    /*$or:[{"properties.gps":{$exists:true}, // o query {$exists:true} permite buscar pela existencia de campos nos ducumentos
+    "properties.carbon_dioxide": {$exists:true}}, // assim é possivel fazer uma busca generia por propriedades sem especificar o tipo de sensor ou atuador
+    {"properties.gps":{$exists:true},
+    "properties.carbon_monoxide": {$exists:true}}
+    ]*/
+    
+    /*"properties.gps":{$exists:true},
+    "properties.carbon_dioxide": {$exists:true},
+    "properties.engine": {$exists:true},*/
+    //"properties.odometer": {$exists:true}, //opcional, não sei se seria tão interessante já que temos o engine
+    //"properties.speed": {$exists:true}, //opcional, não sei se é mais interessante que o 'odometer' em relaçao ao engine
+
+    //alguns sistemas detectam automaticamente a presença do carro, porém existem sistemas em que são feitas manualmente ou simplesmentes não sabem o local exato da vaga ocupada
+    //muitos sistemas de estacionamento inteligente não possuem gps, pois a localização é fixa e incorporada as informaçõs da própria vaga
+    //exemplos de sensores usados em sistemas de estacionamentos inteligentes
+    //"properties.gps":{$exists:true}, //opcional 
+    "properties.pressure":{$exists:true}, 
+    "properties.weight":{$exists:true},
+    "properties.magnetic":{$exists:true},
+    "properties.ultrasonic":{$exists:true},
 }
 
 xhr.onreadystatechange = () => {
@@ -59,6 +77,23 @@ xhr.onreadystatechange = () => {
         if (xhr.status == 200) {
             console.log('Resposta recebida:\n');
             console.log(xhr.responseText);
+            
+            // Colocando todas as urls em um vetor
+            urls = [];
+            ans = JSON.parse(xhr.responseText);
+            ans.forEach(element => {
+                urls.push(element.url_device);
+            });
+            console.log(urls);
+            // Salvando urls em urls.json
+            var jsonContent = JSON.stringify(urls);
+            fs.writeFile("../rulesEngine/urls.json", jsonContent, 'utf8', function (err) {
+                if (err) {
+                    console.log("Erro: urls nao puderam ser salvas.");
+                return console.log(err);
+                }
+            });
+
         }
         else {
             console.log('Erro: status nao esta tudo bem');
@@ -75,18 +110,18 @@ xhr.send(JSON.stringify({
 }));*/
 
 // Teste de envio de lista de urls a ser armazenada no banco de dados
-xhr.open("POST", "http://"+ADRESS+":3000/thingdescription/:lista",true); 
+/*xhr.open("POST", "http://"+ADRESS+":3000/thingdescription/:lista",true); 
 xhr.setRequestHeader('Content-Type', 'application/json');
 xhr.send(JSON.stringify({
     url_list: url_list
-}));
+}));*/
 
 //Teste de string de busca como filtro de busca no banco usando POST
-/*xhr.open("GET", "http://"+ADRESS+":3000/thingdescription/:filtro",true);
+xhr.open("GET", "http://"+ADRESS+":3000/thingdescription/:filtro",true);
 xhr.setRequestHeader('Content-Type', JSON.stringify({//gambiarra das brabas
     string_busca: string_busca
 }));
-xhr.send();*/
+xhr.send();
 
 // por favor não usar esse trecho do código
 /*xhr.setRequestHeader('Content-Type','application/json'); // nao esta funcionando. não sei o porque.
