@@ -1,34 +1,26 @@
 const XMLHttpRequest = require('xmlhttprequest').XMLHttpRequest;
 const xhr = new XMLHttpRequest();
+var fs = require('fs');
 
 // Destination IP
 //const ADRESS = '10.0.0.105';
- const ADRESS = 'ec2-3-135-214-58.us-east-2.compute.amazonaws.com';
-//const ADRESS = "localhost"
+// const ADRESS = 'ec2-3-135-214-58.us-east-2.compute.amazonaws.com';
+const ADRESS = "localhost"
 
 // Test machines IPs
 // const TEST = '192.168.15.5'
 const TEST = "localhost"
 // const TEST = '192.168.0.108' // Lucas, pode colocar seu ip aqui para fazer os testes
 
-// array of disired things urls
-const url_device1 = "http://ec2-3-15-216-69.us-east-2.compute.amazonaws.com:8080/device_100a8292";
-const url_device2 = "http://ec2-3-15-216-69.us-east-2.compute.amazonaws.com:8080/device_103a4845";
-const url_device3 = "http://ec2-3-15-216-69.us-east-2.compute.amazonaws.com:8080/device_105a1396";
-const url_device4 = "http://ec2-3-15-216-69.us-east-2.compute.amazonaws.com:8080/device_108a8674";
+//ATENCAO, TANTO URL DE DEVICE UNICO QUANTO DE LISTA DE DEVICE DEVEM SER ESCRITOS COMO UMA LISTA JSON
+//O CODIGO DE LEITURA DAS URLS APENAS LE NO FORMATO DE LISTA
 
-const url_list = [
-"http://ec2-3-15-216-69.us-east-2.compute.amazonaws.com:8080/device_100a8292",
-"http://ec2-3-15-216-69.us-east-2.compute.amazonaws.com:8080/device_103a4845",
-"http://ec2-3-15-216-69.us-east-2.compute.amazonaws.com:8080/device_105a1396",
-"http://ec2-3-15-216-69.us-east-2.compute.amazonaws.com:8080/device_108a8674",
-"http://ec2-3-15-216-69.us-east-2.compute.amazonaws.com:8080/device_107a7607",
-"http://ec2-3-15-216-69.us-east-2.compute.amazonaws.com:8080/device_109a7394",
-"http://ec2-3-15-216-69.us-east-2.compute.amazonaws.com:8080/device_113a4357",
-"http://ec2-3-15-216-69.us-east-2.compute.amazonaws.com:8080/device_113a7090",
-"http://ec2-3-15-216-69.us-east-2.compute.amazonaws.com:8080/device_114a2939",
-"http://ec2-3-15-216-69.us-east-2.compute.amazonaws.com:8080/device_114a3446"
-];
+// formato de url de device unico
+const url_device = ["http://ec2-18-224-62-25.us-east-2.compute.amazonaws.com:8080/device_101a6546"];
+
+// formato de url para lista de devices
+// POR FAVOR NAO COLOCAR MAIS DE UMA URL EM 'url_list', futuramente será feita a função para adicionar lista de listas de url
+const url_list = ["http://ec2-18-224-62-25.us-east-2.compute.amazonaws.com:8080"];
 
 
 //Exemplos de strings de busca no banco de dados mongodb, para mais informações ou métodos mais refinados de busca
@@ -76,15 +68,15 @@ xhr.onreadystatechange = () => {
         console.log('status: ', xhr.status);
         if (xhr.status == 200) {
             console.log('Resposta recebida:\n');
-            console.log(xhr.responseText);
-            
+            //console.log(xhr.responseText);
+
             // Colocando todas as urls em um vetor
             urls = [];
             ans = JSON.parse(xhr.responseText);
             ans.forEach(element => {
                 urls.push(element.url_device);
             });
-            console.log(urls);
+            //console.log(urls);
             // Salvando urls em urls.json
             var jsonContent = JSON.stringify(urls);
             fs.writeFile("../rulesEngine/urls.json", jsonContent, 'utf8', function (err) {
@@ -110,21 +102,25 @@ xhr.send(JSON.stringify({
 }));*/
 
 // Teste de envio de lista de urls a ser armazenada no banco de dados
-/*xhr.open("POST", "http://"+ADRESS+":3000/thingdescription/:lista",true); 
+xhr.open("POST", "http://"+ADRESS+":3000/thingdescription/:lista",true); 
 xhr.setRequestHeader('Content-Type', 'application/json');
 xhr.send(JSON.stringify({
     url_list: url_list
-}));*/
+}));
 
 //Teste de string de busca como filtro de busca no banco usando POST
-xhr.open("GET", "http://"+ADRESS+":3000/thingdescription/:filtro",true);
+/*xhr.open("GET", "http://"+ADRESS+":3000/thingdescription/:filtro",true);
 xhr.setRequestHeader('Content-Type', JSON.stringify({//gambiarra das brabas
     string_busca: string_busca
 }));
-xhr.send();
+xhr.send();*/
 
 // por favor não usar esse trecho do código
 /*xhr.setRequestHeader('Content-Type','application/json'); // nao esta funcionando. não sei o porque.
 xhr.send(JSON.stringify({
     string_busca: string_busca
 }));*/
+
+//Teste de recebimento de lista de urls
+/*xhr.open("GET","http://ec2-18-224-62-25.us-east-2.compute.amazonaws.com:8080",false);
+xhr.send(console.info(xhr.responseText));*/

@@ -275,19 +275,23 @@ const XMLHttpRequest = require('xmlhttprequest').XMLHttpRequest;
 
 
 //---------- Funcoes auxiliares ----------------
-function gethttp(url_device) { //descontinuado ou aguardando auterações
+function gethttp(url_list) {// modificado para funcionar com um device ou uma lista de devices
 
-    const xhr = new XMLHttpRequest();
-    xhr.open('GET', url_device, true);
-    xhr.send();
+    url_list.forEach(function (url_device) {
+        
+        const xhr = new XMLHttpRequest();
+        xhr.open('GET', url_device, true);
+        xhr.send();
+    
+        xhr.onreadystatechange = function () {
+            if (xhr.readyState == 4 && xhr.status == 200) {
+                response = JSON.parse(xhr.responseText);
+                response["url_device"] = url_device;
+                connect_db(response);
+            }
+        };
 
-    xhr.onreadystatechange = function () {
-        if (xhr.readyState == 4 && xhr.status == 200) {
-            response = JSON.parse(xhr.responseText);
-            response["url_device"] = url_device;
-            connect_db(response);
-        }
-    };
+    });
 
 }
 
@@ -320,10 +324,16 @@ app.post('/thingdescription', (req, res) => {
 app.post('/thingdescription/:lista', (req, res) => {
     url_list = req.body.url_list;
 
-    url_list.forEach(function (element) {
-        gethttp(element);
-    });
+    const xhr = new XMLHttpRequest();
+    xhr.open('GET', url_list, true);
+    xhr.send();
 
+    xhr.onreadystatechange = function () {
+        if (xhr.readyState == 4 && xhr.status == 200) {
+            response = JSON.parse(xhr.responseText);
+            gethttp(response);
+        }
+    };
 
     res.status(200).send('conectado com sucesso');
 
