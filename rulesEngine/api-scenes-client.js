@@ -19,30 +19,47 @@ var conditions = {
         fact: 'properties',
         path: '$.gps.value[0]',
         operator: 'greaterThanInclusive',
-        value: -40
+        value: -40 // Valor mínimo de latitude
     }, {
         fact: 'properties',
         path: '$.gps.value[0]',
         operator: 'lessThanInclusive',
-        value: -18
+        value: -18 // Valor máximo de latitude
     }, {
         fact: 'properties',
         path: '$.gps.value[1]',
         operator: 'greaterThanInclusive',
-        value: -40
+        value: -40 // Valor mínimo de longitude
     }, {
         fact: 'properties',
         path: '$.gps.value[1]',
         operator: 'lessThanInclusive',
-        value: -18
+        value: -18 // Valor máximo de longitude
     }, {
         fact: 'properties',
-        path: '$.carbon_dioxide.value',
+        path: '$.carbon_monoxide.value',
         operator: 'greaterThanInclusive',
-        value: 0
-    }]
+        value: 9 /* Mínimo da faixa de qualidade medida: 9  = moderada
+                                                         11 = ruim
+                                                         13 = muito ruim
+                                                         15 = péssima
+                 */
+    }
+    /*  Opcional para filtrar apenas uma faixa de qualidade específica
+        (não deve ser usada ao medir qualidade péssima)
+    , {
+        fact: 'properties',
+        path: '$.carbon_monoxide.value',
+        operator: 'greaterThanInclusive',
+        value: 11 /* Máximo da faixa de qualidade medida: 11 = moderada
+                                                          13 = ruim
+                                                          15 = muito ruim
+    }
+    */
+    ]
 }
 
+// Condições para teste
 // var conditions = {
 //     any: [{
 //         all: [{
