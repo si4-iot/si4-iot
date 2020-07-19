@@ -324,16 +324,20 @@ app.post('/thingdescription', (req, res) => {
 app.post('/thingdescription/:lista', (req, res) => {
     url_list = req.body.url_list;
 
-    const xhr = new XMLHttpRequest();
-    xhr.open('GET', url_list, true);
-    xhr.send();
+    url_list.forEach(function (url_device) {
 
-    xhr.onreadystatechange = function () {
-        if (xhr.readyState == 4 && xhr.status == 200) {
-            response = JSON.parse(xhr.responseText);
-            gethttp(response);
-        }
-    };
+        const xhr = new XMLHttpRequest();
+        xhr.open('GET', url_device, true);
+        xhr.send();
+
+        xhr.onreadystatechange = function () {
+            if (xhr.readyState == 4 && xhr.status == 200) {
+                response = JSON.parse(xhr.responseText);
+                gethttp(response);
+            }
+        };
+
+    });
 
     res.status(200).send('conectado com sucesso');
 

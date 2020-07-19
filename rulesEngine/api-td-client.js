@@ -16,11 +16,13 @@ const TEST = "localhost"
 //O CODIGO DE LEITURA DAS URLS APENAS LE NO FORMATO DE LISTA
 
 // formato de url de device unico
-const url_device = ["http://ec2-18-224-62-25.us-east-2.compute.amazonaws.com:8080/device_101a6546"];
+const url_device = ["http://200.137.82.45:8126/device_1000a1880"];
 
 // formato de url para lista de devices
-// POR FAVOR NAO COLOCAR MAIS DE UMA URL EM 'url_list', futuramente será feita a função para adicionar lista de listas de url
-const url_list = ["http://ec2-18-224-62-25.us-east-2.compute.amazonaws.com:8080"];
+const url_list = ["http://200.137.82.45:8126"];
+
+// formato de lista de lista de urls
+const urls_list = ["http://200.137.82.45:8126","http://200.137.82.45:8080","http://200.137.82.45:8081"]; 
 
 
 //Exemplos de strings de busca no banco de dados mongodb, para mais informações ou métodos mais refinados de busca
@@ -76,7 +78,7 @@ xhr.onreadystatechange = () => {
             ans.forEach(element => {
                 urls.push(element.url_device);
             });
-            //console.log(urls);
+            console.log(urls);
             // Salvando urls em urls.json
             var jsonContent = JSON.stringify(urls);
             fs.writeFile("../rulesEngine/urls.json", jsonContent, 'utf8', function (err) {
@@ -98,14 +100,14 @@ xhr.onreadystatechange = () => {
 /*xhr.open("POST", "http://"+ADRESS+":3000/thingdescription",true); 
 xhr.setRequestHeader('Content-Type', 'application/json');
 xhr.send(JSON.stringify({
-    url_device: url_device1
+    url_device: url_device
 }));*/
 
-// Teste de envio de lista de urls a ser armazenada no banco de dados
+// Teste de envio de lista de urls ou lista de listas de urls a ser armazenada no banco de dados
 xhr.open("POST", "http://"+ADRESS+":3000/thingdescription/:lista",true); 
 xhr.setRequestHeader('Content-Type', 'application/json');
 xhr.send(JSON.stringify({
-    url_list: url_list
+    url_list: urls_list
 }));
 
 //Teste de string de busca como filtro de busca no banco usando POST
@@ -114,13 +116,3 @@ xhr.setRequestHeader('Content-Type', JSON.stringify({//gambiarra das brabas
     string_busca: string_busca
 }));
 xhr.send();*/
-
-// por favor não usar esse trecho do código
-/*xhr.setRequestHeader('Content-Type','application/json'); // nao esta funcionando. não sei o porque.
-xhr.send(JSON.stringify({
-    string_busca: string_busca
-}));*/
-
-//Teste de recebimento de lista de urls
-/*xhr.open("GET","http://ec2-18-224-62-25.us-east-2.compute.amazonaws.com:8080",false);
-xhr.send(console.info(xhr.responseText));*/
