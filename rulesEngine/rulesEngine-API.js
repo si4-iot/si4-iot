@@ -15,6 +15,7 @@ const DEFAULT_ID_SIZE = 8;
 
 // Database start
 const scenes = require('./scenes.json');
+const { info } = require('console');
 
 // Conditions forms
 const cond_forms = [
@@ -273,6 +274,9 @@ const dbCollection = 'TD';
 //configurando a conexão http
 const XMLHttpRequest = require('xmlhttprequest').XMLHttpRequest;
 
+//teste contador
+var cont = 0;
+
 
 //---------- Funcoes auxiliares ----------------
 function gethttp(url_list) {// modificado para funcionar com um device ou uma lista de devices
@@ -287,6 +291,7 @@ function gethttp(url_list) {// modificado para funcionar com um device ou uma li
             if (xhr.readyState == 4 && xhr.status == 200) {
                 response = JSON.parse(xhr.responseText);
                 response["url_device"] = url_device;
+                cont++;
                 connect_db(response);
             }
         };
@@ -302,10 +307,10 @@ function connect_db(response) {
         var dbo = db.db(dbName);
         dbo.collection(dbCollection).insertOne(response, function (err, res) {
             if (err) throw err;
-            console.log("documento inserido");
             db.close();
         });
     });
+    console.log(cont + " documentos inseridos");
 
 }
 
@@ -314,6 +319,7 @@ function connect_db(response) {
 // Recebe a URL, faz a requisição do TD e o persiste em um banco de dados
 app.post('/thingdescription', (req, res) => {
     url_device = req.body.url_device;
+    cont = 0;
 
     gethttp(url_device);
     res.status(200).send('conectado com sucesso');
@@ -323,6 +329,7 @@ app.post('/thingdescription', (req, res) => {
 // Recebe a URL, faz a requisição de uma lista de TDs e os persiste em um banco de dados
 app.post('/thingdescription/:lista', (req, res) => {
     url_list = req.body.url_list;
+    cont = 0;
 
     url_list.forEach(function (url_device) {
 

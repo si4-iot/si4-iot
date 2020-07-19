@@ -22,7 +22,7 @@ const url_device = ["http://200.137.82.45:8126/device_1000a1880"];
 const url_list = ["http://200.137.82.45:8126"];
 
 // formato de lista de lista de urls
-const urls_list = ["http://200.137.82.45:8126","http://200.137.82.45:8080","http://200.137.82.45:8081"]; 
+const urls_list = ["http://200.137.82.45:8126","http://200.137.82.45:8080","http://200.137.82.45:8122"]; 
 
 
 //Exemplos de strings de busca no banco de dados mongodb, para mais informações ou métodos mais refinados de busca
