@@ -1,15 +1,17 @@
 const XMLHttpRequest = require('xmlhttprequest').XMLHttpRequest;
 const xhr = new XMLHttpRequest();
 var fs = require('fs');
+const { isNull } = require('util');
+var xpw = 0;
 
 // Destination IP
 //const ADRESS = '10.0.0.105';
 // const ADRESS = 'ec2-3-135-214-58.us-east-2.compute.amazonaws.com';
-const ADRESS = "localhost"
+const ADRESS = "localhost";
 
 // Test machines IPs
 // const TEST = '192.168.15.5'
-const TEST = "localhost"
+const TEST = "localhost";
 // const TEST = '192.168.0.108' // Lucas, pode colocar seu ip aqui para fazer os testes
 
 //ATENCAO, TANTO URL DE DEVICE UNICO QUANTO DE LISTA DE DEVICE DEVEM SER ESCRITOS COMO UMA LISTA JSON
@@ -22,7 +24,7 @@ const url_device = ["http://200.137.82.45:8126/device_1000a1880"];
 const url_list = ["http://200.137.82.45:8126"];
 
 // formato de lista de lista de urls
-const urls_list = ["http://200.137.82.45:8126","http://200.137.82.45:8080","http://200.137.82.45:8122"]; 
+const urls_list = ["http://200.137.82.45:8080","http://200.137.82.45:8081","http://200.137.82.45:8082","http://200.137.82.45:8083","http://200.137.82.45:8084","http://200.137.82.45:8085","http://200.137.82.45:8086","http://200.137.82.45:8087","http://200.137.82.45:8088","http://200.137.82.45:8089","http://200.137.82.45:8090","http://200.137.82.45:8091","http://200.137.82.45:8092","http://200.137.82.45:8093","http://200.137.82.45:8094","http://200.137.82.45:8095","http://200.137.82.45:8096","http://200.137.82.45:8097","http://200.137.82.45:8098","http://200.137.82.45:8099","http://200.137.82.45:8100","http://200.137.82.45:8101","http://200.137.82.45:8102","http://200.137.82.45:8103","http://200.137.82.45:8104","http://200.137.82.45:8105","http://200.137.82.45:8106","http://200.137.82.45:8107","http://200.137.82.45:8108","http://200.137.82.45:8109","http://200.137.82.45:8110","http://200.137.82.45:8111","http://200.137.82.45:8112","http://200.137.82.45:8113","http://200.137.82.45:8113","http://200.137.82.45:8114","http://200.137.82.45:8115","http://200.137.82.45:8116","http://200.137.82.45:8117","http://200.137.82.45:8118","http://200.137.82.45:8119","http://200.137.82.45:8120","http://200.137.82.45:8121","http://200.137.82.45:8122","http://200.137.82.45:8123","http://200.137.82.45:8124","http://200.137.82.45:8125","http://200.137.82.45:8126","http://200.137.82.45:8127","http://200.137.82.45:8128","http://200.137.82.45:8129"]; 
 
 
 //Exemplos de strings de busca no banco de dados mongodb, para mais informações ou métodos mais refinados de busca
@@ -73,20 +75,23 @@ xhr.onreadystatechange = () => {
             //console.log(xhr.responseText);
 
             // Colocando todas as urls em um vetor
-            urls = [];
-            ans = JSON.parse(xhr.responseText);
-            ans.forEach(element => {
-                urls.push(element.url_device);
-            });
-            console.log(urls);
-            // Salvando urls em urls.json
-            var jsonContent = JSON.stringify(urls);
-            fs.writeFile("../rulesEngine/urls.json", jsonContent, 'utf8', function (err) {
-                if (err) {
-                    console.log("Erro: urls nao puderam ser salvas.");
-                return console.log(err);
-                }
-            });
+            if(xpw == 1){
+                urls = [];
+                ans = JSON.parse(xhr.responseText);
+                ans.forEach(element => {
+                    urls.push(element.url_device);
+                });
+                console.log(urls);
+                // Salvando urls em urls.json
+                var jsonContent = JSON.stringify(urls);
+                fs.writeFile("../rulesEngine/urls.json", jsonContent, 'utf8', function (err) {
+                    if (err) {
+                        console.log("Erro: urls nao puderam ser salvas.");
+                    return console.log(err);
+                    }
+                });
+                xpw = 0;
+            }
 
         }
         else {
@@ -107,7 +112,7 @@ xhr.send(JSON.stringify({
 xhr.open("POST", "http://"+ADRESS+":3000/thingdescription/:lista",true); 
 xhr.setRequestHeader('Content-Type', 'application/json');
 xhr.send(JSON.stringify({
-    url_list: urls_list
+    url_list: url_list
 }));
 
 //Teste de string de busca como filtro de busca no banco usando POST
@@ -115,4 +120,5 @@ xhr.send(JSON.stringify({
 xhr.setRequestHeader('Content-Type', JSON.stringify({//gambiarra das brabas
     string_busca: string_busca
 }));
+xpw = 1;
 xhr.send();*/
