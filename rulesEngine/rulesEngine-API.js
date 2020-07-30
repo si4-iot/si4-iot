@@ -278,39 +278,37 @@ const XMLHttpRequest = require('xmlhttprequest').XMLHttpRequest;
 var cont = 0;
 
 
+
 //---------- Funcoes auxiliares ----------------
 function gethttp(url_list) {// modificado para funcionar com um device ou uma lista de devices
 
-    url_list.forEach(function (url_device) {
-        
-        const xhr = new XMLHttpRequest();
-        xhr.open('GET', url_device, true);
-        xhr.send();
-    
-        xhr.onreadystatechange = function () {
-            if (xhr.readyState == 4 && xhr.status == 200) {
-                response = JSON.parse(xhr.responseText);
-                response["url_device"] = url_device;
-                cont++;
-                connect_db(response);
-            }
-        };
-
-    });
-
-}
-
-function connect_db(response) {
-
-    MongoClient.connect(url, function (err, db) {
+    new MongoClient.connect(url,{ useUnifiedTopology: true }, function (err, db) {
         if (err) throw err;
         var dbo = db.db(dbName);
-        dbo.collection(dbCollection).insertOne(response, function (err, res) {
-            if (err) throw err;
-            db.close();
+
+        url_list.forEach(function (url_device) {
+
+            const xhr = new XMLHttpRequest();
+            xhr.open('GET', url_device, true);
+            xhr.send();
+
+            xhr.onreadystatechange = function () {
+                if (xhr.readyState == 4 && xhr.status == 200) {
+                    response = JSON.parse(xhr.responseText);
+                    response["url_device"] = url_device;
+                    cont++;
+                    
+                    dbo.collection(dbCollection).insertOne(response, function (err, res) {
+                        if (err) throw err;
+                        console.log(cont + " documentos inseridos");
+                    });
+
+                }
+            };
+
         });
+
     });
-    console.log(cont + " documentos inseridos");
 
 }
 

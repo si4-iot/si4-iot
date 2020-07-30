@@ -21,10 +21,11 @@ const TEST = "localhost";
 const url_device = ["http://200.137.82.45:8126/device_1000a1880"];
 
 // formato de url para lista de devices
-const url_list = ["http://200.137.82.45:8126"];
+const url_list = ["http://200.137.82.45:8080"];
 
-// formato de lista de lista de urls
-const urls_list = ["http://200.137.82.45:8080","http://200.137.82.45:8081","http://200.137.82.45:8082","http://200.137.82.45:8083","http://200.137.82.45:8084","http://200.137.82.45:8085","http://200.137.82.45:8086","http://200.137.82.45:8087","http://200.137.82.45:8088","http://200.137.82.45:8089","http://200.137.82.45:8090","http://200.137.82.45:8091","http://200.137.82.45:8092","http://200.137.82.45:8093","http://200.137.82.45:8094","http://200.137.82.45:8095","http://200.137.82.45:8096","http://200.137.82.45:8097","http://200.137.82.45:8098","http://200.137.82.45:8099","http://200.137.82.45:8100","http://200.137.82.45:8101","http://200.137.82.45:8102","http://200.137.82.45:8103","http://200.137.82.45:8104","http://200.137.82.45:8105","http://200.137.82.45:8106","http://200.137.82.45:8107","http://200.137.82.45:8108","http://200.137.82.45:8109","http://200.137.82.45:8110","http://200.137.82.45:8111","http://200.137.82.45:8112","http://200.137.82.45:8113","http://200.137.82.45:8113","http://200.137.82.45:8114","http://200.137.82.45:8115","http://200.137.82.45:8116","http://200.137.82.45:8117","http://200.137.82.45:8118","http://200.137.82.45:8119","http://200.137.82.45:8120","http://200.137.82.45:8121","http://200.137.82.45:8122","http://200.137.82.45:8123","http://200.137.82.45:8124","http://200.137.82.45:8125","http://200.137.82.45:8126","http://200.137.82.45:8127","http://200.137.82.45:8128","http://200.137.82.45:8129"]; 
+// formato de lista de lista de urls ATENCAO MAXIMO de 1000 devices por dispositivo e no total duas listas de dispositivos
+// além do limite testado, não há garantia que todos os dispositivos serão armazenados
+const urls_list = ["http://200.137.82.45:8080","http://200.137.82.45:8081"];
 
 
 //Exemplos de strings de busca no banco de dados mongodb, para mais informações ou métodos mais refinados de busca
